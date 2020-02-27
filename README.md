@@ -1,3 +1,7 @@
+For at kunne bruge ssh clone, skal der først oprettes en ssh key til account. 
+Følg guiden her [Gitlab Guide](https://docs.gitlab.com/ee/ssh/)
+
+
 # Guide til at få git (Simple kommandoer)
 ### Sådan downloader du filer til din computer
 1. `git clone git@gitlab.au.dk:sharks/project-phoenix.git <fil placering>`\
