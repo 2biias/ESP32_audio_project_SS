@@ -18,6 +18,7 @@ class GUI():
         self.pages.append(spotify_page(self,self.spotify))
         self.pages.append(equalizer_page(self,self.spotify))
         self.pages.append(front_page(self,self.spotify))
+        self.pages.append(search_page(self,self.spotify))
         self.change_page("Frontpage")
 
     def change_page(self,page):
@@ -34,14 +35,12 @@ class page_template():
         self.colour = "dim gray"
         self.colour_text = "black"
         self.colour_button = "white"
-        self.height = 2
-        self.width = 10
+        self.slider = "gray24"
 
         self.spotify = spotify
         self.show = False
         self.gui = GUI
         self.myframe = Frame(self.gui.window, background = self.colour)
-        #overskrift
 
     def show_page(self):
         self.show = True
@@ -50,19 +49,117 @@ class page_template():
     def hide_page(self):
         self.hide = False
         self.myframe.pack_forget()
+        
+    def mybutton(self, text,x ,y ,command, command_arg = None,height=2, width=10):
+        if command_arg == None:
+            button = Button(self.myframe, text=text,bg=self.colour_text, fg=self.colour_button, height = height, width = width, highlightthickness = 0,command=lambda: command())
+        else:
+            button = Button(self.myframe, text=text,bg=self.colour_text, fg=self.colour_button, height = height, width = width, highlightthickness = 0,command=lambda: command(command_arg))
+            
+        button.place(x=x,y=y)
+        return button
 
+    def mySlider(self,x,y, command ,length = 300, width = 40):
+        slider = Scale(self.myframe, from_=100,to=0, length = length, width = width, troughcolor = self.slider , background = self.colour_text ,highlightthickness = 0,showvalue = 0)
+        slider.set(50)
+        slider.bind("<ButtonRelease-1>", command)
+        slider.place(x=x,y=y)
+        return slider
+ 
+
+        
+        
+class front_page(page_template):
+    def __init__(self,GUI,spotify):
+        page_template.__init__(self,GUI,spotify)
+        self.name = "Frontpage"
+
+        self.titel = Label(self.myframe, text="Smart Sound System", font=("Arial Black",35), background = self.colour)
+        self.titel.place(x=160, y=45)
+
+        self.button_spotify = self.mybutton("Spotify",190,150, self.gui.change_page, "spotify", height = 3, width = 50)
+        self.button_equalizer = self.mybutton("Equalizer", 190, 250, self.gui.change_page, "equalizer", height = 3, width = 50)
+        self.button_changeUser = self.mybutton("Change user", 190, 350, self.spotify.authorize, height = 3, width = 50)
+        
+        
+
+class sub_page(page_template):
+    def __init__(self, GUI, spotify):
+        page_template.__init__(self,GUI,spotify)
+
+        self.titel = Label(self.myframe, text="Smart Sound System", font=("Arial Black",35), background = self.colour)
+        self.titel.place(x=100,y=5)
+
+        self.button_return_to_home_page = self.mybutton("Return",690,5, self.gui.change_page, "Frontpage", height = 1)
+
+
+class spotify_page(sub_page):
+    def __init__(self, GUI, spotify):
+        sub_page.__init__(self,GUI,spotify)
+        self.name = "spotify"
+        self.playing = True
+
+        self.button_change_page = self.mybutton("Equalizer",690,40, self.gui.change_page, "equalizer", height = 1)
+        self.button_change_search = self.mybutton("Search",690,75, self.gui.change_page, "search", height = 1)
+        self.button_skip_song = self.mybutton("Skip song",430,150, self.skip_song)
+        self.button_pause_play = self.mybutton("Pause/Play",430,275, self.play_pause)
+        self.button_prev = self.mybutton("Prev song",430,400, self.prev_song)
+
+        self.volume_slider = self.mySlider(625,150,self.update_volume)
+
+        #Kunster
+        self.song = Label(self.myframe, text="Placeholder" , font=("courier", 13), background = self.colour)
+        self.song.place(x = 50, y = 90)
+
+        #sang
+        self.artist = Label(self.myframe, text="Placeholder" , font=("courier",13), background = self.colour)
+        self.artist.place(x = 50, y = 120)
+
+        #billede
+        self.panel = Label(self.myframe, highlightthickness = 0)
+        self.panel.place(x = 50, y = 150)
+    
+    #overwrite inheritance show function    
+    def show_page(self):
+        self.show = True
+        self.myframe.pack(side="top", fill="both", expand=True)
+        self.update_info()
+        
+
+    def update_volume(self, event):
+        print(self.volume_slider.get())
+        self.spotify.setvolume(self.volume_slider.get())
+
+    def skip_song(self):
+        self.spotify.skipsong()
+        self.myframe.after(500, self.update_info)
+
+    def prev_song(self):
+        self.spotify.prev_song()
+        self.myframe.after(500, self.update_info)
+        
+    def change_song(self):
+        self.spotify.add_to_que()
+
+
+           
     def update_info(self):
         #update curently playing
-        artist,song,albumname = self.spotify.infocurrent()
-        self.song.configure(text="Song: " + song)
-        self.artist.configure(text="Artist: " + artist)
-
-        #update image
-        img_url = self.spotify.get_image()
-        response = requests.get(img_url)
-        img_data = response.content
-        self.img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)))
-        self.panel.configure(image=self.img)
+        try:
+            artist,song,albumname = self.spotify.infocurrent()
+            self.song.configure(text="Song: " + song)
+            self.artist.configure(text="Artist: " + artist)
+        
+            #update image
+            img_url = self.spotify.get_image()
+            response = requests.get(img_url)
+            img_data = response.content
+            
+            self.img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)))
+            self.panel.configure(image=self.img)
+        except:
+            pass
+        
 
     def play_pause(self):
         if self.playing == False:
@@ -74,87 +171,13 @@ class page_template():
             self.spotify.pausesong()
 
 
-class sub_page(page_template):
-    def __init__(self, GUI, spotify):
-        page_template.__init__(self,GUI,spotify)
-
-        self.titel = Label(self.myframe, text="Smart Sound System", font=("Arial Black",35), background = self.colour)
-        self.titel.place(x=100,y=5)
-
-        self.button_return_to_home_page = Button(self.myframe, text="Return",bg=self.colour_text, fg=self.colour_button, height = 1, width = self.width, highlightthickness = 0, command=lambda:self.gui.change_page("Frontpage"))
-        self.button_return_to_home_page.place(x=690,y=5)
-
-
-class front_page(page_template):
-    def __init__(self,GUI,spotify):
-        page_template.__init__(self,GUI,spotify)
-        self.name = "Frontpage"
-
-        self.titel = Label(self.myframe, text="Smart Sound System", font=("Arial Black",35), background = self.colour)
-        self.titel.place(x=160, y=45)
-
-        self.button_spotify = Button(self.myframe, text="Spotify",bg=self.colour_text, fg=self.colour_button, height = 3, width = 50, highlightthickness = 0,command=lambda: self.gui.change_page("spotify"))
-        self.button_spotify.place(x=190,y=150)
-
-        self.button_equalizer = Button(self.myframe, text="Equalizer",bg=self.colour_text, fg=self.colour_button, height = 3, width = 50, highlightthickness = 0,command=lambda: self.gui.change_page("equalizer"))
-        self.button_equalizer.place(x=190,y=250)
-
-        self.button_authorize = Button(self.myframe, text="Change User",bg=self.colour_text, fg=self.colour_button, height = 3, width = 50,highlightthickness = 0,command=lambda: self.spotify.authorize())
-        self.button_authorize.place(x=190,y=350)
-
-
-class spotify_page(sub_page):
-    def __init__(self, GUI, spotify):
-        sub_page.__init__(self,GUI,spotify)
-        self.name = "spotify"
-        self.playing = True
-
-        self.button_change_page = Button(self.myframe, text="Equalizer",bg=self.colour_text, fg=self.colour_button,height = 1, width = self.width , highlightthickness = 0,command=lambda: self.gui.change_page("equalizer"))
-        self.button_change_page.place(x=690, y=40)
-
-        self.button_skip_song = Button(self.myframe, text="Skip Song", bg=self.colour_text, fg=self.colour_button, height = self.height, width = self.width,highlightthickness = 0, command=lambda:self.skip_song())
-        self.button_skip_song.place(x=430,y=150)
-
-        self.button_pause_play = Button(self.myframe, text="Pause/Play", bg=self.colour_text, fg=self.colour_button, height = self.height, width = self.width,highlightthickness = 0, command=lambda:self.play_pause())
-        self.button_pause_play.place(x=430, y= 275)
-
-        self.button_prev = Button(self.myframe, text="Prev song", bg=self.colour_text, fg=self.colour_button, height = self.height, width = self.width,highlightthickness = 0, command=lambda:self.prev_song())
-        self.button_prev.place(x=430, y= 400)
-
-        self.volume_slider = Scale(self.myframe, from_=100,to=0, length = 300, width = 40, troughcolor = "gray24" , background = "black",highlightthickness = 0,showvalue = 0)
-        self.volume_slider.set(50)
-        self.volume_slider.bind("<ButtonRelease-1>", self.update_volume)
-        self.volume_slider.place(x=625,y=150)
-
-        self.song = Label(self.myframe, text="Placeholder" , font=("courier", 13), background = self.colour)
-        self.song.place(x = 50, y = 90)
-
-        self.artist = Label(self.myframe, text="Placeholder" , font=("courier",13), background = self.colour)
-        self.artist.place(x = 50, y = 120)
-
-        self.panel = Label(self.myframe, highlightthickness = 0)
-        self.panel.place(x = 50, y = 150)
-
-    def update_volume(self, event):
-        print(self.volume_slider.get())
-        self.spotify.setvolume(self.volume_slider.get())
-
-    def skip_song(self):
-        self.spotify.skipsong()
-        time.sleep(0.5)
-        self.update_info()
-
-    def prev_song(self):
-        self.spotify.prev_song()
-        time.sleep(0.5)
-        self.update_info()
-
 class equalizer_page(sub_page):
     def __init__(self, GUI, spotify):
         sub_page.__init__(self,GUI,spotify)
         self.name = "equalizer"
-        self.button_change_page = Button(self.myframe, text="Spotify",bg=self.colour_text, fg=self.colour_button,height = 1, width = self.width , highlightthickness = 0,command=lambda: self.gui.change_page("spotify"))
-        self.button_change_page.place(x=690, y=40)
+        
+        self.button_change_page = self.mybutton("Spotify",690,40, self.gui.change_page, "spotify", height = 1)
+
 
         self.volume_slider = Scale(self.myframe, from_=100,to=0, length = 300, width = 40, troughcolor = "gray24" , background = "black",highlightthickness = 0,showvalue = 0)
         self.volume_slider.set(50)
@@ -167,3 +190,54 @@ class equalizer_page(sub_page):
         self.volume_slider = Scale(self.myframe, from_=100,to=0, length = 300, width = 40, troughcolor = "gray24" , background = "black",highlightthickness = 0,showvalue = 0)
         self.volume_slider.set(50)
         self.volume_slider.place(x=125,y=150)
+
+
+
+class search_page(sub_page):
+    def __init__(self, GUI, spotify):
+        sub_page.__init__(self,GUI,spotify)
+        self.name = "search"
+        
+        self.button_change_page = self.mybutton("Spotify",690,40, self.gui.change_page, "spotify", height = 1)
+
+        self.search_box = Entry(self.myframe)
+        self.search_box.place(x=450,y=100)
+        
+        self.button_search = self.mybutton("Search",450,140, self.search)
+        
+        self.button_add_to_que = self.mybutton("Add to que",450,200, self.add_to_que)
+
+        
+        #Kunster
+        self.song = Label(self.myframe, text="Placeholder" , font=("courier", 13), background = self.colour)
+        self.song.place(x = 50, y = 90)
+
+        #sang
+        self.artist = Label(self.myframe, text="Placeholder" , font=("courier",13), background = self.colour)
+        self.artist.place(x = 50, y = 120)
+
+        #billede
+        self.panel = Label(self.myframe, highlightthickness = 0)
+        self.panel.place(x = 50, y = 150)
+
+    def search(self):
+        songname, author, uri, imageurl = self.spotify.search_for_Song(self.search_box.get())
+        
+        self.uri = uri
+        
+        self.song.configure(text="Song: " + songname)
+        self.artist.configure(text="Artist: " + author)
+
+        #update image
+        response = requests.get(imageurl)
+        img_data = response.content
+        
+        self.img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)))
+        self.panel.configure(image=self.img)
+        
+    def add_to_que(self):
+        self.spotify.add_to_que(self.uri)
+        
+
+
+

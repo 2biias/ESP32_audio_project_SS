@@ -27,6 +27,8 @@ class spotify():
         self.Play_endpoint = "https://api.spotify.com/v1/me/player/play"
         self.Volume_endpoint = "https://api.spotify.com/v1/me/player/volume"
         self.prev_endpoint = "https://api.spotify.com/v1/me/player/previous"
+        self.add_to_que_endpoint = "https://api.spotify.com/v1/me/player/queue"
+        self.search_endpoint = "https://api.spotify.com/v1/search"
 
     def authorize(self):
         self.response = requests.get(self.Authroize_endpoint, params=self.Authorize_payload, verify=True)
@@ -56,11 +58,49 @@ class spotify():
     def setvolume(self,volume):
         print("Volume in func: " + str(volume))
         myparam = {'volume_percent':volume}
-        r = requests.put(url = self.Volume_endpoint, params = myparam, headers = self.Headers)
+        requests.put(url = self.Volume_endpoint, params = myparam, headers = self.Headers)
 
     def prev_song(self):
         requests.post(url = self.prev_endpoint, headers = self.Headers)
+        
+    def add_to_que(self, songUri):
+        myparam = { "uri": songUri}
+        requests.post(url = self.add_to_que_endpoint,params = myparam, headers = self.Headers)
 
+    def search_for_Song(self, song):
+        print(song)
+        myparam = { "q": song, "type": "track", "limit": "1"}
+        response = requests.get(url = self.search_endpoint,params = myparam, headers = self.Headers)
+        jresponse = response.json()
+        
+        tracks = jresponse['tracks']
+        items = tracks['items']
+        data = items[0]
+        
+        #find songname
+        songname = data['name']
+        print(songname)
+
+        #find uri
+        uri = data['uri']
+        print(uri)
+        
+        #find author
+        album = data['album']
+        artists = album['artists']
+        artistdata = artists[0]
+        author = artistdata['name']
+        print(author)
+        
+        #find image
+        images = album['images']
+        #medium
+        medium = images[1]
+        imageurl = medium['url']
+        print(imageurl)
+        
+        return songname, author, uri, imageurl
+        
 
     def infocurrent(self):
         currently_playing = requests.get(self.Current_endpoint, headers = self.Headers)
