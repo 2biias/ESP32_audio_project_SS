@@ -15,11 +15,17 @@ class GUI():
         self.window.geometry('800x480')
         #self.window.attributes("-fullscreen", True)
         self.pages = []
+        #Create all pages
+        self.append_pages()
+        self.change_page("Authorize")
+
+    def append_pages(self):
         self.pages.append(spotify_page(self,self.spotify))
         self.pages.append(equalizer_page(self,self.spotify))
         self.pages.append(front_page(self,self.spotify))
         self.pages.append(search_page(self,self.spotify))
-        self.change_page("Frontpage")
+        self.pages.append(authorize_page(self,self.spotify))
+
 
     def change_page(self,page):
         for index in self.pages:
@@ -49,13 +55,13 @@ class page_template():
     def hide_page(self):
         self.hide = False
         self.myframe.pack_forget()
-        
+
     def mybutton(self, text,x ,y ,command, command_arg = None,height=2, width=10):
         if command_arg == None:
             button = Button(self.myframe, text=text,bg=self.colour_text, fg=self.colour_button, height = height, width = width, highlightthickness = 0,command=lambda: command())
         else:
             button = Button(self.myframe, text=text,bg=self.colour_text, fg=self.colour_button, height = height, width = width, highlightthickness = 0,command=lambda: command(command_arg))
-            
+
         button.place(x=x,y=y)
         return button
 
@@ -65,10 +71,23 @@ class page_template():
         slider.bind("<ButtonRelease-1>", command)
         slider.place(x=x,y=y)
         return slider
- 
 
-        
-        
+
+class authorize_page(page_template):
+    def __init__(self,GUI,spotify):
+        page_template.__init__(self,GUI,spotify)
+        self.name = "Authorize"
+
+        self.titel = Label(self.myframe, text="Smart Sound System", font=("Arial Black",35), background = self.colour)
+        self.titel.place(x=160, y=45)
+
+        self.button_authorize = self.mybutton("Authorize", 60, 200, self.authorize_pressed, height = 5, width = 80)
+
+    def authorize_pressed(self):
+        self.spotify.authorize()
+        self.gui.change_page("Frontpage")
+
+
 class front_page(page_template):
     def __init__(self,GUI,spotify):
         page_template.__init__(self,GUI,spotify)
@@ -80,8 +99,8 @@ class front_page(page_template):
         self.button_spotify = self.mybutton("Spotify",190,150, self.gui.change_page, "spotify", height = 3, width = 50)
         self.button_equalizer = self.mybutton("Equalizer", 190, 250, self.gui.change_page, "equalizer", height = 3, width = 50)
         self.button_changeUser = self.mybutton("Change user", 190, 350, self.spotify.authorize, height = 3, width = 50)
-        
-        
+
+
 
 class sub_page(page_template):
     def __init__(self, GUI, spotify):
@@ -118,13 +137,13 @@ class spotify_page(sub_page):
         #billede
         self.panel = Label(self.myframe, highlightthickness = 0)
         self.panel.place(x = 50, y = 150)
-    
-    #overwrite inheritance show function    
+
+    #overwrite inheritance show function
     def show_page(self):
         self.show = True
         self.myframe.pack(side="top", fill="both", expand=True)
         self.update_info()
-        
+
 
     def update_volume(self, event):
         print(self.volume_slider.get())
@@ -137,29 +156,29 @@ class spotify_page(sub_page):
     def prev_song(self):
         self.spotify.prev_song()
         self.myframe.after(500, self.update_info)
-        
+
     def change_song(self):
         self.spotify.add_to_que()
 
 
-           
+
     def update_info(self):
         #update curently playing
         try:
             artist,song,albumname = self.spotify.infocurrent()
             self.song.configure(text="Song: " + song)
             self.artist.configure(text="Artist: " + artist)
-        
+
             #update image
             img_url = self.spotify.get_image()
             response = requests.get(img_url)
             img_data = response.content
-            
+
             self.img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)))
             self.panel.configure(image=self.img)
         except:
             pass
-        
+
 
     def play_pause(self):
         if self.playing == False:
@@ -175,7 +194,7 @@ class equalizer_page(sub_page):
     def __init__(self, GUI, spotify):
         sub_page.__init__(self,GUI,spotify)
         self.name = "equalizer"
-        
+
         self.button_change_page = self.mybutton("Spotify",690,40, self.gui.change_page, "spotify", height = 1)
 
 
@@ -197,17 +216,17 @@ class search_page(sub_page):
     def __init__(self, GUI, spotify):
         sub_page.__init__(self,GUI,spotify)
         self.name = "search"
-        
+
         self.button_change_page = self.mybutton("Spotify",690,40, self.gui.change_page, "spotify", height = 1)
 
         self.search_box = Entry(self.myframe)
         self.search_box.place(x=450,y=100)
-        
+
         self.button_search = self.mybutton("Search",450,140, self.search)
-        
+
         self.button_add_to_que = self.mybutton("Add to que",450,200, self.add_to_que)
 
-        
+
         #Kunster
         self.song = Label(self.myframe, text="Placeholder" , font=("courier", 13), background = self.colour)
         self.song.place(x = 50, y = 90)
@@ -222,22 +241,18 @@ class search_page(sub_page):
 
     def search(self):
         songname, author, uri, imageurl = self.spotify.search_for_Song(self.search_box.get())
-        
+
         self.uri = uri
-        
+
         self.song.configure(text="Song: " + songname)
         self.artist.configure(text="Artist: " + author)
 
         #update image
         response = requests.get(imageurl)
         img_data = response.content
-        
+
         self.img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)))
         self.panel.configure(image=self.img)
-        
+
     def add_to_que(self):
         self.spotify.add_to_que(self.uri)
-        
-
-
-
