@@ -23,7 +23,7 @@ class GUI():
         self.pages.append(spotify_page(self,self.spotify))
         self.pages.append(equalizer_page(self,self.spotify))
         self.pages.append(front_page(self,self.spotify))
-        self.pages.append(search_page(self,self.spotify))
+        self.pages.append(search_page(self,self.spotify, self.pages[0]))
         self.pages.append(authorize_page(self,self.spotify))
 
 
@@ -120,11 +120,12 @@ class spotify_page(sub_page):
 
         self.button_change_page = self.mybutton("Equalizer",690,40, self.gui.change_page, "equalizer", height = 1)
         self.button_change_search = self.mybutton("Search",690,75, self.gui.change_page, "search", height = 1)
-        self.button_skip_song = self.mybutton("Skip song",430,150, self.skip_song)
-        self.button_pause_play = self.mybutton("Pause/Play",430,275, self.play_pause)
-        self.button_prev = self.mybutton("Prev song",430,400, self.prev_song)
 
-        self.volume_slider = self.mySlider(625,150,self.update_volume)
+        self.button_skip_song = self.mybutton("Skip song",370,150, self.skip_song)
+        self.button_pause_play = self.mybutton("Pause/Play",370,275, self.play_pause)
+        self.button_prev = self.mybutton("Prev song",370,400, self.prev_song)
+
+        self.volume_slider = self.mySlider(500,150,self.update_volume)
 
         #Kunster
         self.song = Label(self.myframe, text="Placeholder" , font=("courier", 13), background = self.colour)
@@ -137,6 +138,14 @@ class spotify_page(sub_page):
         #billede
         self.panel = Label(self.myframe, highlightthickness = 0)
         self.panel.place(x = 50, y = 150)
+
+        #listbox with # QUESTION:
+        self.listbox = Listbox(self.myframe, highlightthickness = 0, borderwidth = 0, width = 25, height = 17, background  = "gray24")
+        self.listbox.place(x=570, y = 150)
+
+        #update info every search
+        self.myframe.after(1000, self.check_changes)
+
 
     #overwrite inheritance show function
     def show_page(self):
@@ -151,11 +160,10 @@ class spotify_page(sub_page):
 
     def skip_song(self):
         self.spotify.skipsong()
-        self.myframe.after(500, self.update_info)
 
     def prev_song(self):
         self.spotify.prev_song()
-        self.myframe.after(500, self.update_info)
+
 
     def change_song(self):
         self.spotify.add_to_que()
@@ -166,6 +174,7 @@ class spotify_page(sub_page):
         #update curently playing
         try:
             artist,song,albumname = self.spotify.infocurrent()
+            self.currentsong = song
             self.song.configure(text="Song: " + song)
             self.artist.configure(text="Artist: " + artist)
 
@@ -179,6 +188,21 @@ class spotify_page(sub_page):
         except:
             pass
 
+
+    def check_changes(self):
+        try:
+            artist,song,albumname = self.spotify.infocurrent()
+            if song == self.currentsong:
+                pass
+            else:
+                self.update_info()
+                #if song changes delete newest item in que
+                self.listbox.delete(0,0)
+        except:
+            pass
+
+        #check again after 1sec.
+        self.myframe.after(1000, self.check_changes)
 
     def play_pause(self):
         if self.playing == False:
@@ -213,9 +237,11 @@ class equalizer_page(sub_page):
 
 
 class search_page(sub_page):
-    def __init__(self, GUI, spotify):
+    def __init__(self, GUI, spotify, spotifypage):
         sub_page.__init__(self,GUI,spotify)
         self.name = "search"
+
+        self.spotifypage = spotifypage
 
         self.button_change_page = self.mybutton("Spotify",690,40, self.gui.change_page, "spotify", height = 1)
 
@@ -242,6 +268,8 @@ class search_page(sub_page):
     def search(self):
         songname, author, uri, imageurl = self.spotify.search_for_Song(self.search_box.get())
 
+        self.currentsong = songname
+
         self.uri = uri
 
         self.song.configure(text="Song: " + songname)
@@ -256,3 +284,5 @@ class search_page(sub_page):
 
     def add_to_que(self):
         self.spotify.add_to_que(self.uri)
+        #add song to listbox que on spotify page
+        self.spotifypage.listbox.insert(END, self.currentsong)
