@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 import time
 
 from PIL import ImageTk, Image
@@ -130,31 +131,33 @@ class spotify_page(sub_page):
         self.button_change_page = self.mybutton("Equalizer",690,40, self.gui.change_page, "equalizer", height = 1)
         self.button_change_search = self.mybutton("Search",690,75, self.gui.change_page, "search", height = 1)
 
-        self.button_skip_song = self.mybutton("Skip song",370,150, self.skip_song)
-        self.button_pause_play = self.mybutton("Pause/Play",370,275, self.play_pause)
-        self.button_prev = self.mybutton("Prev song",370,400, self.prev_song)
+        self.button_skip_song = self.mybutton("Skip song",370,130, self.skip_song)
+        self.button_pause_play = self.mybutton("Pause/Play",370,255, self.play_pause)
+        self.button_prev = self.mybutton("Prev song",370,380, self.prev_song)
 
-        self.volume_slider = self.mySlider(500,150,self.update_volume)
+        self.volume_slider = self.mySlider(500,130,self.update_volume)
+        self.progress_slider = self.mySlider(50,445,self.slider_time,length = 495, width = 15)
+        self.progress_slider.config(orient = HORIZONTAL)
+        self.progress_slider.config(from_ = 0)
 
         #Kunster
         self.song = Label(self.myframe, text="Placeholder" , font=("courier", 13), background = self.colour)
-        self.song.place(x = 50, y = 90)
+        self.song.place(x = 50, y = 70)
 
         #sang
         self.artist = Label(self.myframe, text="Placeholder" , font=("courier",13), background = self.colour)
-        self.artist.place(x = 50, y = 120)
+        self.artist.place(x = 50, y = 100)
 
         #billede
         self.panel = Label(self.myframe, highlightthickness = 0)
-        self.panel.place(x = 50, y = 150)
+        self.panel.place(x = 50, y = 130)
 
         #listbox with # QUESTION:
-        self.listbox = Listbox(self.myframe, highlightthickness = 0, borderwidth = 0, width = 25, height = 17, background  = "gray24")
-        self.listbox.place(x=570, y = 150)
+        self.listbox = Listbox(self.myframe, highlightthickness = 0, borderwidth = 0, width = 25, height = 18, background  = "gray24")
+        self.listbox.place(x=570, y = 130)
 
         #update info every search
         self.myframe.after(1000, self.check_changes)
-
 
     def show_page(self):
         """Overwrites page_template show method, so that i can also call update_info()"""
@@ -181,7 +184,8 @@ class spotify_page(sub_page):
     def update_info(self):
         """Update currently playing"""
         try:
-            artist,song,albumname,duration_s,progress_s = self.spotify.infocurrent()
+            artist,song,albumname,progress_s,duration_s = self.spotify.infocurrent()
+            self.progress_slider.config(to = duration_s)
             self.currentsong = song
             self.song.configure(text="Song: " + song)
             self.artist.configure(text="Artist: " + artist)
@@ -199,7 +203,8 @@ class spotify_page(sub_page):
 
     def check_changes(self):
         try:
-            artist,song,albumname,duration_s,progress_s = self.spotify.infocurrent()
+            artist,song,albumname,progress_s,duration_s = self.spotify.infocurrent()
+            self.progress_slider.set(progress_s)
             if song == self.currentsong:
                 pass
             else:
@@ -221,6 +226,9 @@ class spotify_page(sub_page):
         elif self.playing == True:
             self.playing = False
             self.spotify.pausesong()
+
+    def slider_time(self,event):
+        pass
 
 
 class equalizer_page(sub_page):
