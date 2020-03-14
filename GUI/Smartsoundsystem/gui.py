@@ -228,7 +228,7 @@ class spotify_page(sub_page):
             self.spotify.pausesong()
 
     def slider_time(self,event):
-        pass
+        self.spotify.update_time_stamp(self.progress_slider.get())
 
 
 class equalizer_page(sub_page):

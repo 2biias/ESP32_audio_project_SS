@@ -19,7 +19,7 @@ class spotify():
         self.mystate = 'mysystem'
         self.Authorize_payload = {'client_id': self.myclient_id, 'response_type': 'code', 'redirect_uri': self.myredirect_uri, 'scope': self.myscope, 'mystate': self.mystate}
         self.endpoints()
-        
+
     def endpoints(self):
         self.Authroize_endpoint = 'https://accounts.spotify.com/authorize'
         self.Token_endpoint = "https://accounts.spotify.com/api/token"
@@ -31,7 +31,8 @@ class spotify():
         self.prev_endpoint = "https://api.spotify.com/v1/me/player/previous"
         self.add_to_que_endpoint = "https://api.spotify.com/v1/me/player/queue"
         self.search_endpoint = "https://api.spotify.com/v1/search"
-        
+        self.seek_endpoint = "https://api.spotify.com/v1/me/player/seek"
+
 
     def authorize(self):
         response = requests.get(self.Authroize_endpoint, params=self.Authorize_payload, verify=True)
@@ -129,3 +130,7 @@ class spotify():
         image = smallimg['url']
         print(image)
         return image
+
+    def update_time_stamp(self,time):
+        myparam = {'position_ms':time*1000}
+        requests.put(url = self.seek_endpoint, params = myparam, headers = self.Headers)
