@@ -62,7 +62,7 @@ class spotify():
 
     def prev_song(self):
         requests.post(url = self.prev_endpoint, headers = self.Headers)
-        
+
     def add_to_que(self, songUri):
         myparam = { "uri": songUri}
         requests.post(url = self.add_to_que_endpoint,params = myparam, headers = self.Headers)
@@ -72,11 +72,11 @@ class spotify():
         myparam = { "q": song, "type": "track", "limit": "1"}
         response = requests.get(url = self.search_endpoint,params = myparam, headers = self.Headers)
         jresponse = response.json()
-        
+
         tracks = jresponse['tracks']
         items = tracks['items']
         data = items[0]
-        
+
         #find songname
         songname = data['name']
         print(songname)
@@ -84,23 +84,23 @@ class spotify():
         #find uri
         uri = data['uri']
         print(uri)
-        
+
         #find author
         album = data['album']
         artists = album['artists']
         artistdata = artists[0]
         author = artistdata['name']
         print(author)
-        
+
         #find image
         images = album['images']
         #medium
         medium = images[1]
         imageurl = medium['url']
         print(imageurl)
-        
+
         return songname, author, uri, imageurl
-        
+
 
     def infocurrent(self):
         currently_playing = requests.get(self.Current_endpoint, headers = self.Headers)
@@ -112,7 +112,9 @@ class spotify():
         song = item['name']
         artist_string  = artists[0]
         artist = artist_string['name']
-        return [artist, song, albumname]
+        duration_s = (item['duration_ms'])/1000
+        progress_s = (songdata['progress_ms'])/1000
+        return [artist, song, albumname, progress_s, duration_s]
 
     def get_image(self):
         currently_playing = requests.get(self.Current_endpoint, headers = self.Headers)

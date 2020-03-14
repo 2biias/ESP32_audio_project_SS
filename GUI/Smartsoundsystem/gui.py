@@ -181,7 +181,7 @@ class spotify_page(sub_page):
     def update_info(self):
         """Update currently playing"""
         try:
-            artist,song,albumname = self.spotify.infocurrent()
+            artist,song,albumname,duration_s,progress_s = self.spotify.infocurrent()
             self.currentsong = song
             self.song.configure(text="Song: " + song)
             self.artist.configure(text="Artist: " + artist)
@@ -199,7 +199,7 @@ class spotify_page(sub_page):
 
     def check_changes(self):
         try:
-            artist,song,albumname = self.spotify.infocurrent()
+            artist,song,albumname,duration_s,progress_s = self.spotify.infocurrent()
             if song == self.currentsong:
                 pass
             else:
