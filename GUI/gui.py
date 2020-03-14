@@ -164,7 +164,6 @@ class spotify_page(sub_page):
     def prev_song(self):
         self.spotify.prev_song()
 
-
     def change_song(self):
         self.spotify.add_to_que()
 
