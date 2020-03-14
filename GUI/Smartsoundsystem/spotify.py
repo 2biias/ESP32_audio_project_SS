@@ -8,7 +8,6 @@ import socketserver
 import http
 
 
-
 class spotify():
     def __init__(self, http):
         self.auth = False
@@ -18,8 +17,11 @@ class spotify():
         self.myredirect_uri = 'http://127.0.0.1:8000'
         self.myscope = 'user-modify-playback-state%20user-read-playback-state%20user-read-playback-state%20user-top-read'
         self.mystate = 'mysystem'
-        self.Authroize_endpoint = 'https://accounts.spotify.com/authorize'
         self.Authorize_payload = {'client_id': self.myclient_id, 'response_type': 'code', 'redirect_uri': self.myredirect_uri, 'scope': self.myscope, 'mystate': self.mystate}
+        self.endpoints()
+        
+    def endpoints(self):
+        self.Authroize_endpoint = 'https://accounts.spotify.com/authorize'
         self.Token_endpoint = "https://accounts.spotify.com/api/token"
         self.Current_endpoint = "https://api.spotify.com/v1/me/player"
         self.Skip_endpoint = "https://api.spotify.com/v1/me/player/next"
@@ -29,19 +31,20 @@ class spotify():
         self.prev_endpoint = "https://api.spotify.com/v1/me/player/previous"
         self.add_to_que_endpoint = "https://api.spotify.com/v1/me/player/queue"
         self.search_endpoint = "https://api.spotify.com/v1/search"
+        
 
     def authorize(self):
-        self.response = requests.get(self.Authroize_endpoint, params=self.Authorize_payload, verify=True)
-        self.webpage = subprocess.Popen(["google-chrome", self.response.url])
+        response = requests.get(self.Authroize_endpoint, params=self.Authorize_payload, verify=True)
+        webpage = subprocess.Popen(["google-chrome", response.url])
         self.http.getinc()
-        self.webpage.kill()
-        self.Token_Body = {'grant_type': 'authorization_code', 'code': http.myHandler.code, 'redirect_uri': self.myredirect_uri,  'client_id': self.myclient_id, 'client_secret': self.myclient_secret}
-        self.response_token = requests.post(url = self.Token_endpoint, data = self.Token_Body)
-        self.json_response = self.response_token.json()
-        self.access_token = str(self.json_response['access_token'])
-        self.expires = str(self.json_response['expires_in'])
-        self.refresh = str(self.json_response['refresh_token'])
-        self.type = str(self.json_response['token_type'])
+        webpage.kill()
+        Token_Body = {'grant_type': 'authorization_code', 'code': http.myHandler.code, 'redirect_uri': self.myredirect_uri,  'client_id': self.myclient_id, 'client_secret': self.myclient_secret}
+        response_token = requests.post(url = self.Token_endpoint, data = Token_Body)
+        json_response = response_token.json()
+        self.access_token = str(json_response['access_token'])
+        self.expires = str(json_response['expires_in'])
+        self.refresh = str(json_response['refresh_token'])
+        self.type = str(json_response['token_type'])
         self.access = self.type +' '+self.access_token
         self.Headers = {'Authorization': self.access}
         self.auth = True
