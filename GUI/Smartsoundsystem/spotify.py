@@ -32,6 +32,7 @@ class spotify():
         self.add_to_que_endpoint = "https://api.spotify.com/v1/me/player/queue"
         self.search_endpoint = "https://api.spotify.com/v1/search"
         self.seek_endpoint = "https://api.spotify.com/v1/me/player/seek"
+        self.userplaying_endpoint = "https://api.spotify.com/v1/me/player/currently-playing"
 
 
     def authorize(self):
@@ -49,6 +50,16 @@ class spotify():
         self.access = self.type +' '+self.access_token
         self.Headers = {'Authorization': self.access}
         self.auth = True
+        
+    def isUserPlaying(self):
+        myparam = { "market": "from_token"}
+        response = requests.get(url = self.userplaying_endpoint,params = myparam, headers = self.Headers)
+        if response.status_code == 200:
+            return True
+        else:
+            return False
+
+        
 
     def skipsong(self):
         requests.post(url = self.Skip_endpoint, headers = self.Headers)
