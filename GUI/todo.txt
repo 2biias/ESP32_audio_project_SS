@@ -3,5 +3,5 @@ Ting der mangler at blive gjort:
 DONE * Fikse bug at den kun opdatere når man går fra main menu til spotify
 NOT DONE * Equalizer page skal laves til 8 pasbånd
 NOT DONE * SPI kommunikation klasse skal laves
-NOT DONE * Fiks så que ikke skipper når man trykker prev song :)
+DONE * Fiks så que ikke skipper når man trykker prev song :)
 
