@@ -4,6 +4,7 @@ from tkinter import messagebox
 import time
 
 from PIL import ImageTk, Image
+from que import queue
 import os
 import requests
 from io import BytesIO
@@ -26,7 +27,7 @@ class GUI():
         self.pages.append(spotify_page(self,self.spotify))
         self.pages.append(equalizer_page(self,self.spotify))
         self.pages.append(front_page(self,self.spotify))
-        self.pages.append(search_page(self,self.spotify, self.pages[0]))
+        self.pages.append(search_page(self,self.spotify, self.pages[0].que))
         self.pages.append(authorize_page(self,self.spotify))
 
 
@@ -128,11 +129,12 @@ class spotify_page(sub_page):
         sub_page.__init__(self,GUI,spotify)
         self.name = "spotify"
         self.playing = True
-        
-        self.songsque = 0
-        
+        self.prev_pressed = 0
 
-        
+        self.que = queue(self)
+
+
+
         self.button_change_page = self.mybutton("Equalizer",690,40, self.gui.change_page, "equalizer", height = 1)
         self.button_change_search = self.mybutton("Search",690,75, self.gui.change_page, "search", height = 1)
 
@@ -156,19 +158,19 @@ class spotify_page(sub_page):
         #billede
         self.panel = Label(self.myframe, highlightthickness = 0)
         self.panel.place(x = 50, y = 130)
-        
+
         #que
         self.queartist = []
         self.quetitle = []
         self.number = []
-        
+
         self.quelabeltitle = Label(self.myframe, text = "Artist", font =("courier",13), background = self.colour)
         self.quelabeltitle.place(x= 580, y = 130)
-        
+
         self.quelabelartist = Label(self.myframe, text = "Title", font =("courier",13), background = self.colour)
         self.quelabelartist.place(x= 680, y = 130)
-        
-        for i in range(11):            
+
+        for i in range(11):
             self.number.append(Label(self.myframe, text=str(i+1) + "." , font=("courier", 5), background = self.colour))
             self.number[i].place(x = 560, y = 155 + i*25)
 
@@ -183,14 +185,14 @@ class spotify_page(sub_page):
     def show_page(self):
         """Overwrites page_template show method, so that i can also call update_info()"""
         self.show = True
-        
+
         while not self.spotify.isUserPlaying():
                 messagebox.showwarning(title = "No song", message = "Please start a song on the your spotify device")
-                
-        self.myframe.pack(side="top", fill="both", expand=True)
-        
 
-            
+        self.myframe.pack(side="top", fill="both", expand=True)
+
+
+
         self.update_info()
 
 
@@ -203,6 +205,7 @@ class spotify_page(sub_page):
 
     def prev_song(self):
         self.spotify.prev_song()
+        self.prev_pressed += 1
 
 
     def change_song(self):
@@ -211,7 +214,7 @@ class spotify_page(sub_page):
 
 
     def update_info(self):
-        """Update currently playing"""                
+        """Update currently playing"""
         try:
             artist,song,albumname,progress_s,duration_s = self.spotify.infocurrent()
             self.progress_slider.config(to = duration_s)
@@ -226,35 +229,25 @@ class spotify_page(sub_page):
 
             self.img = ImageTk.PhotoImage(Image.open(BytesIO(img_data)))
             self.panel.configure(image=self.img)
-             
-                
+
+
         except:
             pass
 
-    def update_que(self):
-        self.queartist[0].destroy()
-        self.quetitle[0].destroy()
-        self.queartist.pop(0)
-        self.quetitle.pop(0)
-        
-        
-        for index, item, in enumerate(self.queartist):
-            item.place(x = 580, y = 155 + index * 25 )
-            
-        for index, item in enumerate(self.quetitle):
-            item.place(x = 680, y = 155 + index * 25 )
-            
-        self.songsque -= 1
-        
     def check_changes(self):
         try:
             artist,song,albumname,progress_s,duration_s = self.spotify.infocurrent()
             self.progress_slider.set(progress_s)
             if not song == self.currentsong:
                 self.update_info()
-                #if song changes delete newest item in que 
-                self.update_que()
-        
+                #if song changes delete newest item in que
+
+                if self.prev_pressed == 0:
+                    self.que.remove_song()
+                if self.prev_pressed > 0:
+                    self.prev_pressed -= 1
+
+
         except:
             pass
 
@@ -300,11 +293,11 @@ class equalizer_page(sub_page):
 
 class search_page(sub_page):
     """This page communicates with the spotify web API, such that the user can search for songs and add them to the que. It inherets from sub_page"""
-    def __init__(self, GUI, spotify, spotifypage):
+    def __init__(self, GUI, spotify, que):
         sub_page.__init__(self,GUI,spotify)
         self.name = "search"
 
-        self.spotifypage = spotifypage
+        self.que = que
 
         self.button_change_page = self.mybutton("Spotify",690,40, self.gui.change_page, "spotify", height = 1)
 
@@ -348,11 +341,4 @@ class search_page(sub_page):
 
     def add_to_que(self):
         self.spotify.add_to_que(self.uri)
-        self.spotifypage.songsque += 1
-        #add song to listbox que on spotify page
-        
-        self.spotifypage.queartist.append(Label(self.spotifypage.myframe, text=self.author , font=("courier", 8), background = self.colour))
-        self.spotifypage.quetitle.append(Label(self.spotifypage.myframe, text=self.currentsong , font=("courier", 8), background = self.colour))
-
-        self.spotifypage.queartist[self.spotifypage.songsque-1].place(x=580, y= 155 + (self.spotifypage.songsque -1 )*25)
-        self.spotifypage.quetitle[self.spotifypage.songsque-1].place(x=680, y= 155 + (self.spotifypage.songsque -1 )*25)
+        self.que.add_song_to_queue(self.author,self.currentsong)
