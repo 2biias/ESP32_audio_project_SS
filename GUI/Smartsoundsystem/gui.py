@@ -175,10 +175,6 @@ class spotify_page(sub_page):
             self.number[i].place(x = 560, y = 155 + i*25)
 
 
-        #listbox with # QUESTION:
-        #self.listbox = Listbox(self.myframe, highlightthickness = 0, borderwidth = 0, width = 25, height = 18, background  = "gray24", relief = RAISED)
-        #self.listbox.place(x=570, y = 130)
-
         #update info every search
         self.myframe.after(1000, self.check_changes)
 
