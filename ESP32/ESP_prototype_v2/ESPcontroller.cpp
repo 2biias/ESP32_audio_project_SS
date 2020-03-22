@@ -43,31 +43,81 @@ esp_err_t ESPcontroller::CodecInit(){
 	res |= i2c_driver_install(I2C_NUM, i2c_config.mode, 0, 0, 0);
 
 	/* mute DAC during setup, power up all systems, slave mode */
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL3, 0x04);
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_CONTROL2, 0x50);
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_CHIPPOWER, 0x00);
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_MASTERMODE, 0x00);
+	//res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL3, 0x04);
+	//res |= WriteCodecI2C(ES8388_ADDR, ES8388_CONTROL2, 0x50);
+	//res |= WriteCodecI2C(ES8388_ADDR, ES8388_CHIPPOWER, 0x00);
+	//res |= WriteCodecI2C(ES8388_ADDR, ES8388_MASTERMODE, 0x00);
+
+	/***************************Chip Control******************************/
+	//ADC Fs same as DAC Fs, 100kOhm divider
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_CONTROL1, 0b00010010);
+	//Turn off all analog 
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_CONTROL2, 0b01001000);
+	//I2S setup
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_MASTERMODE, 0b00000000);
+	//Reset ADC and DAC, truns off ADC analog ref.
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_CHIPPOWER, 0b11000011);
+
+	/*************************DAC config**********************************/
+	//Order of data, data timing (mode A), 16-bit resolution, DSP/PCM mode.
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL1, 0b00011110);
+	//Normal speed, MCLK to sampeling frequency ration 256 
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL2, 0b00000010);
+	//Volume up/down speed, DAC left gain controls volume
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL3, 0b00101000);
+	//Left DAC volume 0dB
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL4, 0b00000000);
+	//Right DAC volume 0dB
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL5, 0b00000000);
+	//No de-emphasis, no inverting, click free power up/down
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL6, 0b00000100);
+	//Connects Left DAC to Left Mixer, Connects LIN to left Mixer, LIN gain 0dB
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL17, 0b10010000);
+	//Connects Right DAC to Right Mixer, Connects RIN to right Mixer, RIN gain 0dB
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL20, 0b10010000);
+	//Same clock for ADC and DAC
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL21, 0b10000000);
+	
+	/*************************ADC Control*********************************/
+	//LINPUT2 & RINPUT2 as input
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_ADCCONTROL2, 0b01010000);
+	//Data size 16-bit, DSP/PCM mode
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_ADCCONTROL4, 0b00001111);
+	//MCLK ratio 256
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_ADCCONTROL5, 0b00000010);
+	//Both ADCs is controlled by left
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_ADCCONTROL7, 0b00101000);
+	//Left ADC volume 0dB 
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_ADCCONTROL8, 0b00000000);
+
+	/***************************ADC power management**********************/
+	//Turns off microphone
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_ADCPOWER, 0b00001100);
+	
+	/**************************DAC power management***********************/
+	//Turn DAC on, enable L/ROUT1 and L/ROUT2
+	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACPOWER, 0b00111110);
 
 	/* power up DAC and enable only LOUT1 / ROUT1, ADC sample rate = DAC sample rate */
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACPOWER, 0x30);
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_CONTROL1, 0x12);
+	// res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACPOWER, 0x30);
+	// res |= WriteCodecI2C(ES8388_ADDR, ES8388_CONTROL1, 0x12);
 
-	/* DAC I2S setup: 16 bit word length, I2S format; MCLK / Fs = 256*/
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL1, 0x18);
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL2, 0x02);
+	// /* DAC I2S setup: 16 bit word length, I2S format; MCLK / Fs = 256*/
+	// res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL1, 0x18);
+	// res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL2, 0x02);
 
-	/* DAC to output route mixer configuration */
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL16, 0x00);
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL17, 0x90);
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL20, 0x90);
+	// /* DAC to output route mixer configuration */
+	// res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL16, 0x00);
+	// res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL17, 0x90);
+	// res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL20, 0x90);
 
-	/* DAC and ADC use same LRCK, enable MCLK input; output resistance setup */
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL21, 0x80);
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL23, 0x00);
+	// /* DAC and ADC use same LRCK, enable MCLK input; output resistance setup */
+	// res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL21, 0x80);
+	// res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL23, 0x00);
 
-	/* DAC volume control: 0dB (maximum, unattenuated)  */
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL5, 0x00);
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL4, 0x00);
+	// /* DAC volume control: 0dB (maximum, unattenuated)  */
+	// res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL5, 0x00);
+	// res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL4, 0x00);
 
 	/* power down ADC while configuring; volume: +9dB for both channels */
 	//res |= WriteCodecI2C(ES8388_ADDR, ES8388_ADCPOWER, 0xff);
@@ -88,8 +138,8 @@ esp_err_t ESPcontroller::CodecInit(){
 	//res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL25, 0x1e);
 
 	/* power up and enable DAC; power up ADC (no MIC bias) */
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACPOWER, 0x3c);
-	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL3, 0x00);
+	//res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACPOWER, 0x3c);
+	//res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL3, 0x00);
 	//res |= WriteCodecI2C(ES8388_ADDR, ES8388_ADCPOWER, 0x09);
 
 	return res;
