@@ -1,0 +1,501 @@
+In archive /home/stud/esp/prototype5/pipeline_bt_sink/build/bluetooth_service/libbluetooth_service.a:
+
+bt_keycontrol.o:     file format elf32-xtensa-le
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .literal.key_act_state_hdl_idle 0000003c  00000000  00000000  00000034  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  1 .literal.key_act_state_hdl_press 00000048  00000000  00000000  00000070  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  2 .literal.key_act_state_hdl_release 00000034  00000000  00000000  000000b8  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  3 .literal.bt_key_act_state_machine 00000010  00000000  00000000  000000ec  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  4 .literal.key_act_time_out 00000004  00000000  00000000  000000fc  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  5 .literal.bt_key_act_sm_init 00000034  00000000  00000000  00000100  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  6 .literal.bt_key_act_sm_deinit 00000008  00000000  00000000  00000134  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  7 .text         00000000  00000000  00000000  0000013c  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  8 .data         00000000  00000000  00000000  0000013c  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          00000000  00000000  00000000  0000013c  2**0
+                  ALLOC
+ 10 .rodata.str1.4 0000024d  00000000  00000000  0000013c  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 11 .text.key_act_state_hdl_idle 000000bb  00000000  00000000  0000038c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 12 .text.key_act_state_hdl_press 000000f8  00000000  00000000  00000448  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 13 .text.key_act_state_hdl_release 000000c4  00000000  00000000  00000540  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 14 .text.bt_key_act_state_machine 0000003b  00000000  00000000  00000604  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 15 .text.key_act_time_out 00000017  00000000  00000000  00000640  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 16 .text.bt_key_act_sm_init 0000007d  00000000  00000000  00000658  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 17 .text.bt_key_act_sm_deinit 00000027  00000000  00000000  000006d8  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 18 .rodata.__func__$5686 00000013  00000000  00000000  00000700  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 19 .rodata.__FUNCTION__$5705 0000001a  00000000  00000000  00000714  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 20 .rodata.__FUNCTION__$5700 00000018  00000000  00000000  00000730  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 21 .rodata.__FUNCTION__$5695 00000017  00000000  00000000  00000748  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 22 .bss.key_cb   00000010  00000000  00000000  00000760  2**2
+                  ALLOC
+ 23 .debug_frame  000000b8  00000000  00000000  00000760  2**2
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 24 .debug_info   00000942  00000000  00000000  00000818  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 25 .debug_abbrev 0000019a  00000000  00000000  0000115a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 26 .debug_loc    00000164  00000000  00000000  000012f4  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 27 .debug_aranges 00000050  00000000  00000000  00001458  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 28 .debug_ranges 00000040  00000000  00000000  000014a8  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 29 .debug_line   000004fa  00000000  00000000  000014e8  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 30 .debug_str    00000516  00000000  00000000  000019e2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 31 .comment      0000003b  00000000  00000000  00001ef8  2**0
+                  CONTENTS, READONLY
+ 32 .xtensa.info  00000038  00000000  00000000  00001f33  2**0
+                  CONTENTS, READONLY
+ 33 .xt.lit       00000038  00000000  00000000  00001f6b  2**0
+                  CONTENTS, RELOC, READONLY
+ 34 .xt.prop      00000354  00000000  00000000  00001fa3  2**0
+                  CONTENTS, RELOC, READONLY
+
+bluetooth_service.o:     file format elf32-xtensa-le
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .literal._bt_stream_destroy 00000004  00000000  00000000  00000034  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  1 .literal.bt_a2d_source_data_cb 00000010  00000000  00000000  00000038  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  2 .literal.bda2str 00000008  00000000  00000000  00000048  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  3 .literal.get_name_from_eir 0000000c  00000000  00000000  00000050  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  4 .literal.filter_inquiry_scan_result 0000006c  00000000  00000000  0000005c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  5 .literal.bt_app_gap_cb 0000009c  00000000  00000000  000000c8  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  6 .literal.bt_a2d_source_cb 00000078  00000000  00000000  00000164  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  7 .literal.bt_a2d_sink_cb 00000050  00000000  00000000  000001dc  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  8 .literal.bt_a2d_sink_data_cb 0000000c  00000000  00000000  0000022c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  9 .literal._bt_periph_destroy 00000008  00000000  00000000  00000238  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 10 .literal._bt_periph_init 0000000c  00000000  00000000  00000240  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 11 .literal.bt_avrc_ct_cb 00000028  00000000  00000000  0000024c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 12 .literal.periph_bluetooth_passthrough_cmd 00000020  00000000  00000000  00000274  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 13 .literal.bluetooth_service_start 000000f0  00000000  00000000  00000294  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 14 .literal.bluetooth_service_destroy 00000040  00000000  00000000  00000384  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 15 .literal.bluetooth_service_create_stream 00000040  00000000  00000000  000003c4  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 16 .literal.bluetooth_service_create_periph 00000030  00000000  00000000  00000404  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 17 .literal.periph_bluetooth_play 0000000c  00000000  00000000  00000434  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 18 .literal.periph_bluetooth_pause 0000000c  00000000  00000000  00000440  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 19 .literal.periph_bluetooth_stop 0000000c  00000000  00000000  0000044c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 20 .literal.periph_bluetooth_next 00000004  00000000  00000000  00000458  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 21 .literal.periph_bluetooth_prev 00000004  00000000  00000000  0000045c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 22 .literal.periph_bluetooth_rewind 00000004  00000000  00000000  00000460  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 23 .literal.periph_bluetooth_fast_forward 00000004  00000000  00000000  00000464  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 24 .literal.periph_bluetooth_discover 00000008  00000000  00000000  00000468  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 25 .literal.periph_bluetooth_cancel_discover 00000008  00000000  00000000  00000470  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 26 .literal.periph_bluetooth_connect 0000001c  00000000  00000000  00000478  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 27 .text         00000000  00000000  00000000  00000494  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+ 28 .data         00000000  00000000  00000000  00000494  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+ 29 .bss          00000000  00000000  00000000  00000494  2**0
+                  ALLOC
+ 30 .text._bt_stream_destroy 0000000e  00000000  00000000  00000494  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 31 .text._bt_periph_run 00000007  00000000  00000000  000004a4  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+ 32 .text.bt_a2d_source_data_cb 00000064  00000000  00000000  000004ac  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 33 .rodata.str1.4 000007da  00000000  00000000  00000510  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 34 .text.bda2str 00000048  00000000  00000000  00000cec  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 35 .text.get_name_from_eir 0000006a  00000000  00000000  00000d34  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 36 .text.filter_inquiry_scan_result 00000174  00000000  00000000  00000da0  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 37 .text.bt_app_gap_cb 000001c0  00000000  00000000  00000f14  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 38 .rodata.bt_app_gap_cb 00000018  00000000  00000000  000010d4  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA
+ 39 .text.bt_a2d_source_cb 0000017b  00000000  00000000  000010ec  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 40 .rodata.bt_a2d_source_cb 0000001c  00000000  00000000  00001268  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA
+ 41 .text.bt_a2d_sink_cb 0000017c  00000000  00000000  00001284  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 42 .text.bt_a2d_sink_data_cb 0000002a  00000000  00000000  00001400  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 43 .text._bt_periph_destroy 00000014  00000000  00000000  0000142c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 44 .text._bt_periph_init 00000016  00000000  00000000  00001440  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 45 .text.bt_avrc_ct_cb 00000087  00000000  00000000  00001458  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 46 .rodata.bt_avrc_ct_cb 00000018  00000000  00000000  000014e0  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA
+ 47 .text.periph_bluetooth_passthrough_cmd 0000006e  00000000  00000000  000014f8  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 48 .rodata       00000020  00000000  00000000  00001568  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 49 .text.bluetooth_service_start 00000276  00000000  00000000  00001588  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 50 .text.bluetooth_service_destroy 00000092  00000000  00000000  00001800  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 51 .text.bluetooth_service_create_stream 000000a3  00000000  00000000  00001894  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 52 .text.bluetooth_service_create_periph 00000056  00000000  00000000  00001938  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 53 .text.periph_bluetooth_play 00000028  00000000  00000000  00001990  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 54 .text.periph_bluetooth_pause 00000028  00000000  00000000  000019b8  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 55 .text.periph_bluetooth_stop 00000032  00000000  00000000  000019e0  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 56 .text.periph_bluetooth_next 00000011  00000000  00000000  00001a14  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 57 .text.periph_bluetooth_prev 00000011  00000000  00000000  00001a28  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 58 .text.periph_bluetooth_rewind 00000011  00000000  00000000  00001a3c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 59 .text.periph_bluetooth_fast_forward 00000011  00000000  00000000  00001a50  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 60 .text.periph_bluetooth_discover 00000021  00000000  00000000  00001a64  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 61 .text.periph_bluetooth_cancel_discover 00000020  00000000  00000000  00001a88  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 62 .text.periph_bluetooth_connect 00000046  00000000  00000000  00001aa8  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 63 .rodata.__func__$7372 0000000e  00000000  00000000  00001af0  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 64 .rodata.__FUNCTION__$7357 00000020  00000000  00000000  00001b00  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 65 .rodata.__FUNCTION__$7350 0000001a  00000000  00000000  00001b20  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 66 .rodata.__func__$7330 00000011  00000000  00000000  00001b3c  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 67 .rodata.__func__$7344 00000018  00000000  00000000  00001b50  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 68 .rodata.__FUNCTION__$7342 00000018  00000000  00000000  00001b68  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 69 .data.a2dp_sample_rate 00000004  00000000  00000000  00001b80  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+ 70 .bss.g_bt_service 00000004  00000000  00000000  00001b84  2**2
+                  ALLOC
+ 71 .debug_frame  000002b0  00000000  00000000  00001b84  2**2
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 72 .debug_info   00002fdd  00000000  00000000  00001e34  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 73 .debug_abbrev 0000041a  00000000  00000000  00004e11  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 74 .debug_loc    00000a15  00000000  00000000  0000522b  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 75 .debug_aranges 000000f8  00000000  00000000  00005c40  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 76 .debug_ranges 00000100  00000000  00000000  00005d38  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 77 .debug_line   00000f4c  00000000  00000000  00005e38  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 78 .debug_str    0000256a  00000000  00000000  00006d84  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 79 .comment      0000003b  00000000  00000000  000092ee  2**0
+                  CONTENTS, READONLY
+ 80 .xtensa.info  00000038  00000000  00000000  00009329  2**0
+                  CONTENTS, READONLY
+ 81 .xt.lit       000000d8  00000000  00000000  00009361  2**0
+                  CONTENTS, RELOC, READONLY
+ 82 .xt.prop      00000c90  00000000  00000000  00009439  2**0
+                  CONTENTS, RELOC, READONLY
+
+hfp_stream.o:     file format elf32-xtensa-le
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .literal.bt_hf_client_cb 00000170  00000000  00000000  00000034  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  1 .literal.bt_app_hf_client_outgoing_cb 00000008  00000000  00000000  000001a4  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  2 .literal.bt_app_hf_client_incoming_cb 00000014  00000000  00000000  000001ac  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  3 .literal._hfp_stream_destroy 00000008  00000000  00000000  000001c0  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  4 .literal.hfp_open_and_close_evt_cb_register 00000004  00000000  00000000  000001c8  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  5 .literal.hfp_service_init 0000000c  00000000  00000000  000001cc  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  6 .literal.hfp_stream_init 00000090  00000000  00000000  000001d8  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  7 .text         00000000  00000000  00000000  00000268  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  8 .data         00000000  00000000  00000000  00000268  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          00000000  00000000  00000000  00000268  2**0
+                  ALLOC
+ 10 .rodata.str1.4 000009ad  00000000  00000000  00000268  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 11 .text.bt_hf_client_cb 000003a0  00000000  00000000  00000c18  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 12 .rodata.bt_hf_client_cb 00000050  00000000  00000000  00000fb8  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA
+ 13 .text.bt_app_hf_client_outgoing_cb 00000020  00000000  00000000  00001008  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 14 .text.bt_app_hf_client_incoming_cb 00000044  00000000  00000000  00001028  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 15 .text._hfp_stream_destroy 00000016  00000000  00000000  0000106c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 16 .text.hfp_open_and_close_evt_cb_register 00000024  00000000  00000000  00001084  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 17 .text.hfp_service_init 00000016  00000000  00000000  000010a8  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 18 .text.hfp_stream_init 000001a4  00000000  00000000  000010c0  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 19 .rodata.__FUNCTION__$6770 00000010  00000000  00000000  00001264  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 20 .data.c_inband_ring_state_str 00000008  00000000  00000000  00001274  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 21 .data.c_subscriber_service_type_str 0000000c  00000000  00000000  0000127c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 22 .data.c_at_response_code_str 0000001c  00000000  00000000  00001288  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 23 .data.c_volume_control_target_str 00000008  00000000  00000000  000012a4  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 24 .data.c_call_mpty_type_str 00000008  00000000  00000000  000012ac  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 25 .data.c_call_state_str 0000001c  00000000  00000000  000012b4  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 26 .data.c_call_dir_str 00000008  00000000  00000000  000012d0  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 27 .data.c_resp_and_hold_str 0000000c  00000000  00000000  000012d8  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 28 .data.c_call_held_str 0000000c  00000000  00000000  000012e4  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 29 .data.c_call_setup_str 00000010  00000000  00000000  000012f0  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 30 .data.c_call_str 00000008  00000000  00000000  00001300  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 31 .data.c_roaming_status_str 00000008  00000000  00000000  00001308  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 32 .data.c_service_availability_status_str 00000008  00000000  00000000  00001310  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 33 .data.c_vr_state_str 00000008  00000000  00000000  00001318  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 34 .data.c_audio_state_str 00000010  00000000  00000000  00001320  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 35 .data.c_connection_state_str 00000014  00000000  00000000  00001330  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 36 .data.c_hf_evt_str 00000054  00000000  00000000  00001344  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, DATA
+ 37 .bss.hfp_outgoing_stream 00000004  00000000  00000000  00001398  2**2
+                  ALLOC
+ 38 .bss.hfp_incoming_stream 00000004  00000000  00000000  00001398  2**2
+                  ALLOC
+ 39 .bss.hfp_stream_user_callback 00000008  00000000  00000000  00001398  2**2
+                  ALLOC
+ 40 .bss.control_num 00000004  00000000  00000000  00001398  2**2
+                  ALLOC
+ 41 .debug_frame  000000b8  00000000  00000000  00001398  2**2
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 42 .debug_info   00001868  00000000  00000000  00001450  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 43 .debug_abbrev 000002d5  00000000  00000000  00002cb8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 44 .debug_loc    00000320  00000000  00000000  00002f8d  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 45 .debug_aranges 00000050  00000000  00000000  000032ad  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 46 .debug_ranges 00000040  00000000  00000000  000032fd  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 47 .debug_line   00000754  00000000  00000000  0000333d  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 48 .debug_str    00001a47  00000000  00000000  00003a91  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 49 .comment      0000003b  00000000  00000000  000054d8  2**0
+                  CONTENTS, READONLY
+ 50 .xtensa.info  00000038  00000000  00000000  00005513  2**0
+                  CONTENTS, READONLY
+ 51 .xt.lit       00000038  00000000  00000000  0000554b  2**0
+                  CONTENTS, RELOC, READONLY
+ 52 .xt.prop      000005dc  00000000  00000000  00005583  2**0
+                  CONTENTS, RELOC, READONLY
+
+a2dp_stream.o:     file format elf32-xtensa-le
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .literal.bt_a2d_source_data_cb 00000018  00000000  00000000  00000034  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  1 .literal.bt_a2d_source_cb 00000044  00000000  00000000  0000004c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  2 .literal.a2dp_source_destory 00000008  00000000  00000000  00000090  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  3 .literal.a2dp_sink_destory 00000018  00000000  00000000  00000098  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  4 .literal.bt_a2d_sink_cb 00000090  00000000  00000000  000000b0  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  5 .literal.bt_a2d_sink_data_cb 00000010  00000000  00000000  00000140  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  6 .literal._bt_avrc_periph_destroy 00000008  00000000  00000000  00000150  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  7 .literal._bt_avrc_periph_init 0000000c  00000000  00000000  00000158  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  8 .literal.bt_avrc_ct_cb 00000028  00000000  00000000  00000164  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+  9 .literal.periph_bt_avrc_passthrough_cmd 0000000c  00000000  00000000  0000018c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 10 .literal.a2dp_stream_init 00000080  00000000  00000000  00000198  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 11 .literal.a2dp_destroy 0000000c  00000000  00000000  00000218  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 12 .literal.bt_create_periph 00000030  00000000  00000000  00000224  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 13 .literal.periph_bt_play 0000000c  00000000  00000000  00000254  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 14 .literal.periph_bt_pause 0000000c  00000000  00000000  00000260  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 15 .literal.periph_bt_stop 0000000c  00000000  00000000  0000026c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 16 .literal.periph_bt_avrc_next 00000004  00000000  00000000  00000278  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 17 .literal.periph_bt_avrc_prev 00000004  00000000  00000000  0000027c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 18 .literal.periph_bt_avrc_rewind 00000004  00000000  00000000  00000280  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 19 .literal.periph_bt_avrc_fast_forward 00000004  00000000  00000000  00000284  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 20 .literal.periph_bt_discover 00000008  00000000  00000000  00000288  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 21 .text         00000000  00000000  00000000  00000290  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+ 22 .data         00000000  00000000  00000000  00000290  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+ 23 .bss          00000000  00000000  00000000  00000290  2**0
+                  ALLOC
+ 24 .text._bt_avrc_periph_run 00000007  00000000  00000000  00000290  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+ 25 .text.bt_a2d_source_data_cb 00000066  00000000  00000000  00000298  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 26 .rodata.str1.4 00000392  00000000  00000000  00000300  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 27 .text.bt_a2d_source_cb 000000c6  00000000  00000000  00000694  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 28 .text.a2dp_source_destory 00000015  00000000  00000000  0000075c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 29 .text.a2dp_sink_destory 0000002e  00000000  00000000  00000774  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 30 .text.bt_a2d_sink_cb 000001da  00000000  00000000  000007a4  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 31 .text.bt_a2d_sink_data_cb 00000034  00000000  00000000  00000980  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 32 .text._bt_avrc_periph_destroy 00000012  00000000  00000000  000009b4  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 33 .text._bt_avrc_periph_init 00000016  00000000  00000000  000009c8  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 34 .text.bt_avrc_ct_cb 0000007b  00000000  00000000  000009e0  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 35 .rodata.bt_avrc_ct_cb 00000018  00000000  00000000  00000a5c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, DATA
+ 36 .text.periph_bt_avrc_passthrough_cmd 00000035  00000000  00000000  00000a74  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 37 .text.a2dp_stream_init 00000108  00000000  00000000  00000aac  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 38 .text.a2dp_destroy 00000021  00000000  00000000  00000bb4  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 39 .text.bt_create_periph 0000004c  00000000  00000000  00000bd8  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 40 .text.periph_bt_play 00000025  00000000  00000000  00000c24  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 41 .text.periph_bt_pause 00000025  00000000  00000000  00000c4c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 42 .text.periph_bt_stop 00000025  00000000  00000000  00000c74  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 43 .text.periph_bt_avrc_next 00000011  00000000  00000000  00000c9c  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 44 .text.periph_bt_avrc_prev 00000011  00000000  00000000  00000cb0  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 45 .text.periph_bt_avrc_rewind 00000011  00000000  00000000  00000cc4  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 46 .text.periph_bt_avrc_fast_forward 00000011  00000000  00000000  00000cd8  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 47 .text.periph_bt_discover 00000020  00000000  00000000  00000cec  2**2
+                  CONTENTS, ALLOC, LOAD, RELOC, READONLY, CODE
+ 48 .rodata.__func__$7290 0000000e  00000000  00000000  00000d0c  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 49 .rodata.__FUNCTION__$7273 00000011  00000000  00000000  00000d1c  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+ 50 .bss.trans_label 00000001  00000000  00000000  00000d2d  2**0
+                  ALLOC
+ 51 .bss.a2d_stream_type 00000004  00000000  00000000  00000d30  2**2
+                  ALLOC
+ 52 .bss.avrcp_conn_state 00000001  00000000  00000000  00000d30  2**0
+                  ALLOC
+ 53 .bss.bt_avrc_periph 00000004  00000000  00000000  00000d30  2**2
+                  ALLOC
+ 54 .bss.a2dp_user_callback 0000000c  00000000  00000000  00000d30  2**2
+                  ALLOC
+ 55 .bss.a2dp_source_stream_handle 00000004  00000000  00000000  00000d30  2**2
+                  ALLOC
+ 56 .bss.a2dp_sink_stream_handle 00000004  00000000  00000000  00000d30  2**2
+                  ALLOC
+ 57 .debug_frame  00000220  00000000  00000000  00000d30  2**2
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 58 .debug_info   00001ad4  00000000  00000000  00000f50  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 59 .debug_abbrev 00000351  00000000  00000000  00002a24  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 60 .debug_loc    00000687  00000000  00000000  00002d75  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 61 .debug_aranges 000000c8  00000000  00000000  000033fc  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 62 .debug_ranges 000000b8  00000000  00000000  000034c4  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 63 .debug_line   00000946  00000000  00000000  0000357c  2**0
+                  CONTENTS, RELOC, READONLY, DEBUGGING
+ 64 .debug_str    00001622  00000000  00000000  00003ec2  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 65 .comment      0000003b  00000000  00000000  000054e4  2**0
+                  CONTENTS, READONLY
+ 66 .xtensa.info  00000038  00000000  00000000  0000551f  2**0
+                  CONTENTS, READONLY
+ 67 .xt.lit       000000a8  00000000  00000000  00005557  2**0
+                  CONTENTS, RELOC, READONLY
+ 68 .xt.prop      000007b0  00000000  00000000  000055ff  2**0
+                  CONTENTS, RELOC, READONLY
