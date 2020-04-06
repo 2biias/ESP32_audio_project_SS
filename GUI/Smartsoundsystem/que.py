@@ -10,7 +10,6 @@ class queue():
 
     def add_song_to_queue(self,artist,title):
         self.songs_in_queue += 1
-        print(artist)
         self.queue_artist.append(Label(self.spotifypage.myframe, text= artist , font=("courier", 8), background = "dim gray"))
         self.queue_title.append(Label(self.spotifypage.myframe, text=title , font=("courier", 8), background = "dim gray"))
 
