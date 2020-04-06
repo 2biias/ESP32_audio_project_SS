@@ -27,7 +27,7 @@ void app_main(){
   ESPcontroller.InitFlash();
 
   //Setting up Ringbuffers
-  Ringbuffer<uint8_t> testbuffer(16384);
+  Ringbuffer<uint8_t> testbuffer(12288);
 
   ESPcontroller.I2SInit();
   ESPcontroller.CodecInit();

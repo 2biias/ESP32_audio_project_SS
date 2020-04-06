@@ -47,9 +47,12 @@ esp_err_t Bluetooth::Bluetooth_a2dp_sink_init(const char* device_name)
 void Bluetooth::bt_a2d_sink_data_cb(const uint8_t *data, uint32_t len)
 {
   //uint32_t i2s_bytes_written = 0;
-  gpio_set_level(GPIO_NUM_13, 1);
-  uint32_t bytes_written = this_->write(data, len);
-  gpio_set_level(GPIO_NUM_13, 0);
+  if(len > 0) {
+    gpio_set_level(GPIO_NUM_15, 1);
+    uint32_t bytes_written = this_->write(data, len);
+    gpio_set_level(GPIO_NUM_15, 0);
+    this_->getWriteBuffer()->GiveBinarySemaphore(); // original
+  }
   //ESP_LOGI(TAG, "Bytes recieved: %ul", len);
 }
 void Bluetooth::bt_a2d_sink_cb(esp_a2d_cb_event_t event, esp_a2d_cb_param_t *param)

@@ -39,7 +39,9 @@ esp_err_t ESPcontroller::CodecInit(){
   // Enabling PA amplifiers
   gpio_set_direction(GPIO_NUM_21, GPIO_MODE_OUTPUT);
   gpio_reset_pin(GPIO_NUM_13);
+  gpio_reset_pin(GPIO_NUM_15);
   gpio_set_direction(GPIO_NUM_13, GPIO_MODE_OUTPUT);
+  gpio_set_direction(GPIO_NUM_15, GPIO_MODE_OUTPUT);
   gpio_set_level(GPIO_NUM_21, 1);
 
   // Setting mode, sda_io_num, scl_io_num, sda_pullup_en, scl_pullup_en and master.clock_speed
@@ -75,9 +77,9 @@ esp_err_t ESPcontroller::CodecInit(){
   res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL2, 0b00000010);
   // 0x00 audio on LIN1&RIN1,  0x09 LIN2&RIN2
   res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL16, 0x09);
-  //Connects Left DAC to Left Mixer, LIN gain 0dB
+  //Connects Left DAC to Left Mixer, LIN gain 0dB 0b10010000
 	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL17, 0b10010000);
-	//Connects Right DAC to Right Mixer, RIN gain 0dB
+	//Connects Right DAC to Right Mixer, RIN gain 0dB 0b10010000
 	res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL20, 0b10010000);
   //Internal ADC and DAC use the same LRCK clock, ADC LRCK as internal LRCK
   res |= WriteCodecI2C(ES8388_ADDR, ES8388_DACCONTROL21, 0b10000000);
@@ -123,21 +125,23 @@ esp_err_t ESPcontroller::CodecInit(){
 	return res;
 }
 
-esp_err_t ESPcontroller::I2SInit(){
+esp_err_t ESPcontroller::I2SInit() {
+
   i2s_config_t i2s_read_config = {
 		.mode = i2s_mode_t(I2S_MODE_MASTER | I2S_MODE_TX),
-		.sample_rate = 44100,
-		.bits_per_sample = (i2s_bits_per_sample_t)16,
+		.sample_rate = 48000, //
+		.bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT, //
     .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
-		.communication_format = I2S_COMM_FORMAT_I2S_MSB, //Data format MSB or PCM
-		.intr_alloc_flags = 0, // default interrupt priority
-		.dma_buf_count = 8, // number of DMA buffer
+		.communication_format = (i2s_comm_format_t)(I2S_COMM_FORMAT_I2S | I2S_COMM_FORMAT_I2S_MSB), //Data format MSB (i2s_comm_format_t)(I2S_COMM_FORMAT_I2S | I2S_COMM_FORMAT_I2S_MSB)
+		.intr_alloc_flags = ESP_INTR_FLAG_LEVEL2, // default interrupt priority
+		.dma_buf_count = 32, // number of DMA buffer
 		.dma_buf_len = 256, // length of DMA buffers
-		.use_apll = 1, // using accurate clock (APLL) as main I2S clock
+		.use_apll = 0, // using accurate clock (APLL) as main I2S clock
 		.tx_desc_auto_clear = 1, // Clear tx descriptors in underflow conditions
 		.fixed_mclk = 0 // non fixed MCLK
 	};
-  //do somethi
+
+  //do something
 	i2s_pin_config_t i2s_read_pin_config = {
 		.bck_io_num = GPIO_NUM_5,
 		.ws_io_num = GPIO_NUM_25,
@@ -147,7 +151,8 @@ esp_err_t ESPcontroller::I2SInit(){
 
 	i2s_driver_install(I2S_NUM, &i2s_read_config, 0, NULL);
 	i2s_set_pin(I2S_NUM, &i2s_read_pin_config);
-
+  //i2s_set_sample_rates(I2S_NUM, 44100);
+  i2s_set_clk(I2S_NUM, 48000, I2S_BITS_PER_SAMPLE_16BIT, I2S_CHANNEL_STEREO);
 	/*******************/
 
 	PIN_FUNC_SELECT(PERIPHS_IO_MUX_GPIO0_U, FUNC_GPIO0_CLK_OUT1);

@@ -38,6 +38,20 @@ public:
         return true;
     }
 
+    Ringbuffer<T>* getReadBuffer()
+    {
+      if(readbuffer != nullptr)
+        return readbuffer;
+      return nullptr;
+    }
+
+    Ringbuffer<T>* getWriteBuffer()
+    {
+      if(writebuffer != nullptr)
+        return writebuffer;
+      return nullptr;
+    }
+
     int read(T *buf, uint32_t len)
     {
         if(readbuffer != nullptr)

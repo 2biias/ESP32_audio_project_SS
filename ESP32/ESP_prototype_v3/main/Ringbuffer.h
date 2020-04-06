@@ -6,6 +6,7 @@
 #include <cstring>
 #include <atomic>
 
+//#include "freertos/semphr.h"
 #include "ScopedLocker.h"
 
 template<class T>
@@ -15,18 +16,28 @@ private:
     std::vector<T> data_;
     typename std::vector<T>::iterator write_pos, read_pos;
     std::atomic<bool> newDataAvailable_;
-    SemaphoreHandle_t MutexHandle;
+    SemaphoreHandle_t BinarySemaphore;
+    SemaphoreHandle_t Mutex;
 public:
     Ringbuffer(int size)
     : data_(size), write_pos(data_.begin()), read_pos(data_.begin()), newDataAvailable_(false)
-    , MutexHandle(xSemaphoreCreateMutex())
+    , BinarySemaphore(xSemaphoreCreateBinary()), Mutex((xSemaphoreCreateMutex()))
     {}
 
     ~Ringbuffer() {
-      vSemaphoreDelete(MutexHandle);
+      vSemaphoreDelete(BinarySemaphore);
+      vSemaphoreDelete(Mutex);
     }
 
-    int size(){
+    void TakeBinarySemaphore() {
+      xSemaphoreTake(BinarySemaphore, portMAX_DELAY);
+    }
+
+    void GiveBinarySemaphore() {
+      xSemaphoreGive(BinarySemaphore);
+    }
+
+    int size() {
         return data_.size();
     }
 
@@ -37,7 +48,6 @@ public:
         if(write_pos == data_.end()){
             write_pos = data_.begin();
         }
-        newDataAvailable_ = true;
     }
 
     T &get(int pos) {
@@ -51,6 +61,7 @@ public:
             {
                 add(buffer[i]);
             }
+            newDataAvailable_ = true;
             return Writelen;
         }
         return 0;
@@ -58,9 +69,8 @@ public:
 
     /* It is the users responsibility to make sure that all available bytes are read before a new write is performed */
     int read(T *buffer, int Readlen){
-      ScopedLocker idiom(&MutexHandle);
+      //ScopedLocker Idiom(&Mutex);
       if(newDataAvailable_){
-
           //Calculate new available bytes from read to write iterator
           int bytesAvailableDist_ = std::distance(read_pos, write_pos);
           if(bytesAvailableDist_ > 0) { // If write_pos grater than read_pos
