@@ -159,10 +159,6 @@ class spotify_page(sub_page):
         self.panel = Label(self.myframe, highlightthickness = 0)
         self.panel.place(x = 50, y = 130)
 
-        #que
-        self.queartist = []
-        self.quetitle = []
-        self.number = []
 
         self.quelabeltitle = Label(self.myframe, text = "Artist", font =("courier",13), background = self.colour)
         self.quelabeltitle.place(x= 580, y = 130)
@@ -239,7 +235,10 @@ class spotify_page(sub_page):
                 #if song changes delete newest item in que
 
                 if self.prev_pressed == 0:
-                    self.que.remove_song()
+                    try:
+                        self.que.remove_song()
+                    except IndexError as err:
+                        print(err)
                 if self.prev_pressed > 0:
                     self.prev_pressed -= 1
 
@@ -297,13 +296,19 @@ class search_page(sub_page):
 
         self.button_change_page = self.mybutton("Spotify",690,40, self.gui.change_page, "spotify", height = 1)
 
-        self.search_box = Entry(self.myframe)
-        self.search_box.place(x=450,y=100)
+        self.search_box = Entry(self.myframe, width = 33)
+        self.search_box.place(x=450,y=150)
 
-        self.button_search = self.mybutton("Search",450,140, self.search)
+        self.button_search = self.mybutton("Search",450,200, self.search)
 
-        self.button_add_to_que = self.mybutton("Add to que",450,200, self.add_to_que)
-
+        self.button_add_to_que = self.mybutton("Add to queue",600,200, self.add_to_que)
+        
+        
+        #Message
+        self.message = Label(self.myframe, text="Message" , font=("courier", 15), background = self.colour)
+        self.messageInfo = Label(self.myframe, text="" , font=("courier", 13), background = self.colour)
+        self.message.place(x = 450, y = 270)
+        self.messageInfo.place(x = 450, y = 310)
 
         #Kunster
         self.song = Label(self.myframe, text="Placeholder" , font=("courier", 13), background = self.colour)
@@ -322,6 +327,7 @@ class search_page(sub_page):
 
         self.currentsong = songname
         self.author = author
+        
 
         self.uri = uri
 
@@ -336,5 +342,14 @@ class search_page(sub_page):
         self.panel.configure(image=self.img)
 
     def add_to_que(self):
-        self.spotify.add_to_que(self.uri)
-        self.que.add_song_to_queue(self.author,self.currentsong)
+        try:
+            self.que.add_song_to_queue(str(self.author),str(self.currentsong))
+        except TypeError as err:
+            print(err)
+        except IndexError as err:
+            self.messageInfo.configure(text = err)
+        else:
+            self.spotify.add_to_que(self.uri)
+            self.messageInfo.configure(text = self.currentsong + " Added to queue")
+            
+
