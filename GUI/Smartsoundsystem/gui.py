@@ -37,8 +37,11 @@ class GUI():
             if index.show == True:
                 index.hide_page()
             if index.name == page:
+                nameFound = 1
                 index.show_page()
-
+                
+        if nameFound == 0:
+            raise NameError
 
 class page_template():
     """Class responsible for the basic gui element each page will contain, every page inheritance from this page"""
@@ -59,7 +62,7 @@ class page_template():
         self.myframe.pack(side="top", fill="both", expand=True)
 
     def hide_page(self):
-        self.hide = False
+        self.show = False
         self.myframe.pack_forget()
 
     def mybutton(self, text,x ,y ,command, command_arg = None,height=2, width=10):
@@ -159,7 +162,8 @@ class spotify_page(sub_page):
         self.panel = Label(self.myframe, highlightthickness = 0)
         self.panel.place(x = 50, y = 130)
 
-
+        self.number = []
+        
         self.quelabeltitle = Label(self.myframe, text = "Artist", font =("courier",13), background = self.colour)
         self.quelabeltitle.place(x= 580, y = 130)
 
@@ -177,7 +181,7 @@ class spotify_page(sub_page):
     def show_page(self):
         """Overwrites page_template show method, so that i can also call update_info()"""
         self.show = True
-
+        
         while not self.spotify.isUserPlaying():
                 messagebox.showwarning(title = "No song", message = "Please start a song on the your spotify device")
 
@@ -189,7 +193,6 @@ class spotify_page(sub_page):
 
 
     def update_volume(self, event):
-        print(self.volume_slider.get())
         self.spotify.setvolume(self.volume_slider.get())
 
     def skip_song(self):

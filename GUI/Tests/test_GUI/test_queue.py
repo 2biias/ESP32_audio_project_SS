@@ -19,16 +19,20 @@ from Smartsoundsystem import gui
 
 
 
-class test_queue(unittest.TestCase):
+class queueTestCase(unittest.TestCase):
     
     @classmethod
     def setUpClass(cls):
-        cls.myserver = http.http()
+        print("Testing Queue Class")
+        cls.myserver = http.http(6000)
         cls.myspotify = spotify.spotify(cls.myserver)
         cls.mygui = gui.GUI(cls.myspotify)
     
         cls.queue= cls.mygui.pages[0].que
-        
+    
+    @classmethod
+    def tearDownClass(Cls):
+        print("")
         
     def test_addSongToQueue(self):
         self.assertEqual(0,self.queue.songs_in_queue)

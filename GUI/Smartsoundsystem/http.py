@@ -15,8 +15,8 @@ class myHandler(BaseHTTPRequestHandler):
 
 
 class http():
-    def __init__(self):
-        self.PORT = 8000
+    def __init__(self, port):
+        self.PORT = port
         self.server = HTTPServer(('', self.PORT), myHandler)
         print("serving at port", self.PORT)
 
