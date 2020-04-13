@@ -12,7 +12,7 @@ from Smartsoundsystem import gui
 
 def main():
     #Create http webserver
-    myserver = http.http()
+    myserver = http.http(8000)
     
     #Create spotify class
     myspotify = spotify.spotify(myserver)
