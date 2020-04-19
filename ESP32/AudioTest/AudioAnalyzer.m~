@@ -17,15 +17,12 @@ audiowrite('Input/InputChirp.wav', chirp_data, 48000);
 T = 2;                  % 2 sekunder
 fs = 48000;             % Samplefrekvens
 n = 0:(round(T*fs)-1);  % Array til sinus-værdier
-freq = 2000;            % Valgt frekvens
 
-sin_signal = sin(2*pi*n*freq/fs); % create signal
+sin_signal = A*cos(2*pi*n*myfreq/fs); % create signal
 
 sin_data = uencode(sin_signal,16, 1, 'signed'); % Typecaster
 
-sin_data = [sin_data; sin_data]';
-
-audiowrite('Input/InputSine.wav', sin_data, 48000);
+sin_data 
 %% Test on chirp
 fc = 300;
 fs = 48000;
