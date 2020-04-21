@@ -45,30 +45,146 @@ int main() {
             *data16_it = avg;
             *(data16_it+1) = avg;
         }
-
+        
         // Crossover
-        //Old output samples
-        short oldOutput[2] = {0, 0};
-        short oldInput[2] = {0, 0};
 
-        float b[3] = {0.003, 0.007, 0.003};
-        float a[2] = {1.814, -0.824};
-
-        /*
-        std::vector<short>output(data16.size());
-        std::vector<short>::iterator output_it = output.begin();
-        */
-
-        for(auto data16_it = data16.begin(); data16_it != data16.end(); data16_it+=2)
         {
-            *data16_it = short(float(*data16_it)*b[0] + float(oldInput[0]) * b[1] + float(oldInput[1]) * b[2]) + (float(oldOutput[0]) * a[0] + float(oldOutput[1]) * a[1]);
+            // ******************************* LP (left channel) ******************************* //
+            float biquad1_oldinput[4] = {0, 0};
+            float biquad1_oldoutput[4] = {0, 0};
+            
+            float biquad2_oldinput[4] = {0, 0};
+            float biquad2_oldoutput[4] = {0, 0};
 
-            oldOutput[0] = *data16_it;
-            oldOutput[1] =  oldOutput[0];
-            oldInput[0] = *data16_it;
-            oldInput[1] = oldInput[0];
+            float filter_coefficients[5] = 
+            {
+                0.003916126660547371, 0.007832253321094742, 0.003916126660547371, 1.815341082704568, -0.8310055893467575//// b0, b1, b2, a1, a2
+            };
+
+            float accumulator;
+            float output, input;
+
+            for(auto data16_it = data16.begin(); data16_it != data16.end(); data16_it+=2)
+            {
+                accumulator = 0;
+                input = 0;
+                output = 0;
+                
+                input = (float)(*data16_it);
+
+                // ******************* Filtering through biquad 1 *******************//
+                accumulator = biquad1_oldinput[1] * filter_coefficients[2]; //b2
+                accumulator += biquad1_oldinput[0] * filter_coefficients[1]; //b1
+                accumulator += input * filter_coefficients[0]; //b0
+
+                // Reorder biquad1 input history
+                biquad1_oldinput[1] = biquad1_oldinput[0];
+                biquad1_oldinput[0] = input;
+
+                accumulator += biquad1_oldoutput[1] * filter_coefficients[4]; // a2
+                accumulator += biquad1_oldoutput[0] * filter_coefficients[3]; // a1
+
+                // Reorder biquad1 output history
+                biquad1_oldoutput[1] = biquad1_oldoutput[0];
+                biquad1_oldoutput[0] = accumulator;
+
+                output = accumulator;
+
+                
+                // ******************* Filtering through biquad 2 *******************//
+                // Resetting accumulator
+                
+                accumulator = 0;
+                input = output;
+
+                accumulator = biquad2_oldinput[1] * filter_coefficients[2]; //b2
+                accumulator += biquad2_oldinput[0] * filter_coefficients[1]; //b1
+                accumulator += input * filter_coefficients[0]; //b0
+
+                // Reorder biquad1 input history
+                biquad2_oldinput[1] = biquad2_oldinput[0];
+                biquad2_oldinput[0] = input;
+
+                accumulator += biquad2_oldoutput[1] * filter_coefficients[4]; // a2
+                accumulator += biquad2_oldoutput[0] * filter_coefficients[3]; // a1
+
+                // Reorder biquad1 output history
+                biquad2_oldoutput[1] = biquad2_oldoutput[0];
+                biquad2_oldoutput[0] = accumulator;
+
+                *data16_it = (short)(accumulator*0.99);
+                
+            }
         }
 
+        {
+            // ******************************* HP (left channel) ******************************* //
+            float biquad1_oldinput[4] = {0, 0};
+            float biquad1_oldoutput[4] = {0, 0};
+            
+            float biquad2_oldinput[4] = {0, 0};
+            float biquad2_oldoutput[4] = {0, 0};
+
+            float filter_coefficients[5] = 
+            {
+                0.9115866680128322, -1.8231733360256643, 0.9115866680128322, 1.815341082704568, -0.8310055893467575// b0, b1, b2, a1, a2
+            };
+
+            float accumulator;
+            float output, input;
+
+            for(auto data16_it = data16.begin()+1; data16_it != (data16.end()-1); data16_it+=2)
+            {
+                accumulator = 0;
+                input = 0;
+                output = 0;
+                
+                input = (float)(*data16_it);
+
+                // ******************* Filtering through biquad 1 *******************//
+                accumulator = biquad1_oldinput[1] * filter_coefficients[2]; //b2
+                accumulator += biquad1_oldinput[0] * filter_coefficients[1]; //b1
+                accumulator += input * filter_coefficients[0]; //b0
+
+                // Reorder biquad1 input history
+                biquad1_oldinput[1] = biquad1_oldinput[0];
+                biquad1_oldinput[0] = input;
+
+                accumulator += biquad1_oldoutput[1] * filter_coefficients[4]; // a2
+                accumulator += biquad1_oldoutput[0] * filter_coefficients[3]; // a1
+
+                // Reorder biquad1 output history
+                biquad1_oldoutput[1] = biquad1_oldoutput[0];
+                biquad1_oldoutput[0] = accumulator;
+
+                output = accumulator;
+                
+                // ******************* Filtering through biquad 2 *******************//
+                // Resetting accumulator
+                
+                accumulator = 0;
+                input = output;
+
+                accumulator = biquad2_oldinput[1] * filter_coefficients[2]; //b2
+                accumulator += biquad2_oldinput[0] * filter_coefficients[1]; //b1
+                accumulator += input * filter_coefficients[0]; //b0
+
+                // Reorder biquad1 input history
+                biquad2_oldinput[1] = biquad2_oldinput[0];
+                biquad2_oldinput[0] = input;
+
+                accumulator += biquad2_oldoutput[1] * filter_coefficients[4]; // a2
+                accumulator += biquad2_oldoutput[0] * filter_coefficients[3]; // a1
+
+                // Reorder biquad1 output history
+                biquad2_oldoutput[1] = biquad2_oldoutput[0];
+                biquad2_oldoutput[0] = accumulator;
+
+                *data16_it = (short)(accumulator*0.99);
+                
+            }
+        }
+        
 
         // Write back elements in big endian
         for (auto &data16_it : data16)

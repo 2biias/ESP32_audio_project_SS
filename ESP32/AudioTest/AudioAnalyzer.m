@@ -3,9 +3,18 @@
 %% Make a chirp
 
 fs = 48000;
-t = 0:1/fs:2;
-chirp_data = chirp(t, 0, 1, 10000);
+t = 0:1/fs:4;
+chirp_data = chirp(t, 0, 2, 12000, 'linear', 90);
 spectrogram(chirp_data, 128, 120, 129, fs , 'yaxis')
+
+% Hanning window can be applied
+%chirp_data = chirp_data.*hann(length(chirp_data))';
+
+% Mean can be subtracted
+%chirp_data = chirp_data-mean(chirp_data);
+
+% Chirp can be zero-padded
+%chirp_data = [zeros(1, 10000) chirp_data zeros(1, 10000)];
 
 chirp_data = uencode(chirp_data,16, 1, 'signed');
 
@@ -13,94 +22,10 @@ chirp_data = [chirp_data; chirp_data]';
 
 audiowrite('Input/InputChirp.wav', chirp_data, 48000);
 
-%% Make sinus input
-T = 2;                  % 2 sekunder
-fs = 48000;             % Samplefrekvens
-n = 0:(round(T*fs)-1);  % Array til sinus-værdier
-freq = 2000;            % Valgt frekvens
+%% Plot chirp
 
-sin_signal = sin(2*pi*n*freq/fs); % create signal
-
-sin_data = uencode(sin_signal,16, 1, 'signed'); % Typecaster
-
-sin_data = [sin_data; sin_data]';
-
-audiowrite('Input/InputSine.wav', sin_data, 48000);
-%% Test on chirp
-fc = 300;
-fs = 48000;
-fc/(fs/2)
-[b1,a1] = butter(2,fc/(fs/2),'high')
-figure(1); clf
-freqz(b1,a1)
-
-filter_response_HP = freqz(b1, a1, fs/2, fs);
-
-figure(2); clf
-[b2, a2] = butter(2, fc/(fs/2), 'low')
-freqz(b2,a2)
-
-filter_response_LP = freqz(b2, a2, fs/2, fs);
-
-parallel = filter_response_HP + filter_response_LP;
-
-f_axis = logspace(log10(1), log10(fs/2), fs/2);
-
-figure(500); clf
-semilogx(f_axis, 20*log10(abs(filter_response_HP)),'linewidth',2)
-hold on
-semilogx(f_axis, 20*log10(abs(filter_response_LP)),'linewidth',2)
-xlabel('log(f) [Hz]')
-ylabel('Gain [dB]')
-fc1 = xline(300, 'g', 'LineWidth',1.5);
-legend([fc1], ["300Hz"]);
-xlim([0, 1000]);
-ylim([-10, 3])
-hold off
-
-figure(3); clf
-hold on
-subplot(2, 1, 1)
-semilogx(f_axis, 20*log10(abs(filter_response_HP)),'linewidth',2)
-xlabel('log(f) [Hz]')
-ylabel('Gain [dB]')
-fc1 = xline(300, 'g', 'LineWidth',1.5);
-legend([fc1], ["300Hz"]);
-xlim([0, 1000]);
-ylim([-10, 3])
-subplot(2, 1, 2)
-semilogx(f_axis, 20*log10(abs(filter_response_LP)),'linewidth',2)
-xlabel('log(f) [Hz]')
-ylabel('Gain [dB]')
-fc1 = xline(300, 'g', 'LineWidth',1.5);
-legend([fc1], ["300Hz"]);
-xlim([0, 1000]);
-ylim([-10, 3])
-hold off
-
-
-figure(4); clf
-hold on
-subplot(2, 1, 1)
-semilogx(f_axis, 20*log10(abs(parallel)),'linewidth',2)
-xlabel('log(f) [Hz]')
-ylabel('Gain [dB]')
-fc1 = xline(300, 'g', 'LineWidth',1.5);
-legend([fc1], ["300Hz"]);
-xlim([0, fs/2]);
-ylim([-20, 17])
-subplot(2, 1, 2)
-semilogx(f_axis, rad2deg(unwrap(angle(parallel))), 'LineWidth',1.5)
-xlabel('log(f) [Hz]')
-ylabel('Fase [grader]')
-xlim([0, fs/2]);
-fc1 = xline(300, 'g', 'LineWidth',1.5);
-legend([fc1],["300Hz"]);
-hold off
-
-y1 = svf(x, 500, 0.707, 'lp') + svf(x, 500, 0.707, 'hp');
-
-y2 = svf(svf(x, 500, 0.707, 'lp'), 500, 0.707, 'lp') + svf(svf(x, 500, 0.707, 'hp'), 500, 0.707, 'hp');
+figure(100); clf
+plot(t, chirp_data);
 
 %% Listen to chirp
 
@@ -109,7 +34,7 @@ sound(toplay, fs2)
 
 %% Reading LeftRight audiofile into int16
 
-[data, fs] = audioread('LeftRight.wav', 'native');
+[data, fs] = audioread('Input/LeftRight.wav', 'native');
 
 %% Listen to original sound
 [toplay, fs2] = audioread('LeftRight.wav');
@@ -134,33 +59,70 @@ Serialized = SerializeToFile(chirp_data);
 
 Power_processed = CalcPower(Deserialized);
 
-%% Audio analysis
+%% ************************** Audio analysis ******************************
+
+%% FFT original
+
+chirp_data_single = chirp_data(:,1);
+
+N_samples = length(chirp_data_single);
+freq_axis = (0:(N_samples/2)-1)*(fs/N_samples);
+
+fft_original = abs(fft(chirp_data_single)/N_samples);
+
+figure(500); clf
+semilogx(freq_axis, 20*log10(fft_original(1:N_samples/2)))
+hold on
+grid on
+xlim([1 24000])
+xlabel('log(f) [Hz]')
+ylabel('Gain [dB]')
+hold off
+
+%% FFT filtered
 
 left_channel = Deserialized(:,1);
 right_channel = Deserialized(:,2);
+summed = left_channel + right_channel;
 N_samples_left = length(left_channel);
 N_samples_right = length(right_channel);
-fft_left = abs(fft(left_channel));
-fft_right = abs(fft(right_channel));
+fft_left = abs(fft(left_channel)/N_samples_left);
+fft_right = abs(fft(right_channel)/N_samples_right);
+fft_summed = abs(fft(summed)/N_samples_right);
 
 freq_axis = (0:(N_samples_left/2)-1)*(fs/N_samples_left);
 
-figure(1); clf
-semilogx(freq_axis, 20*log(fft_left(1:N_samples_left/2)))
+figure(4); clf
+semilogx(freq_axis, 20*log10(fft_left(1:N_samples_left/2)))
 hold on
 grid on
 xlim([1 24000])
 hold off
 
-figure(2); clf
-semilogx(freq_axis, 20*log(fft_right(1:N_samples_left/2)))
+figure(5); clf
+semilogx(freq_axis, 20*log10(fft_right(1:N_samples_left/2)))
 hold on
 grid on
 xlim([1 24000])
 hold off
+
+figure(6); clf
+semilogx(freq_axis, 20*log10(fft_summed(1:N_samples_left/2)))
+hold on
+grid on
+xlim([1 24000])
+hold off
+
 %% Convert Read data to audio file
 
-audiowrite('Output/OutputSound.wav', left_channel, 48000);
+left_channel_st = [left_channel left_channel];
+right_channel_st = [right_channel right_channel];
+mix = [left_channel right_channel];
+audiowrite('Output/OutputSound.wav', mix, 48000);
 
-%% Is equal
-isequal(data, deserialized)
+%% Plotting channel in time domain
+
+t = [0:length(left_channel)-1].*(1/fs);
+
+figure(211); clf
+plot(t, right_channel)

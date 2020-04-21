@@ -12,7 +12,7 @@ fclose(fid);
 
 % Deserialized into two channels
 
-Deserialized = zeros(length_origin, 2, 'int16');
+Deserialized = zeros(length_origin/2, 2, 'int16');
 
 row = 1;
 for n = 1:length(raw)
