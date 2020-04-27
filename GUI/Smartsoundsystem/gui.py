@@ -3,6 +3,8 @@ from tkinter import ttk
 from tkinter import messagebox
 import time
 
+#from spi import Spi
+
 from PIL import ImageTk, Image
 from que import queue
 import os
@@ -13,6 +15,7 @@ from io import BytesIO
 class GUI():
     """Main class for gui, will make the tkinter root and keep charge of which page to show"""
     def __init__ (self,spotify):
+        #self.myspi = Spi()
         self.spotify = spotify
         self.window = Tk()
         self.window.title("Smart Sound System")
