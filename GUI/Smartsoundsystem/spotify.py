@@ -62,7 +62,12 @@ class spotify():
         
 
     def skipsong(self):
-        requests.post(url = self.Skip_endpoint, headers = self.Headers)
+        response = requests.post(url = self.Skip_endpoint, headers = self.Headers)
+        
+        if not response.ok:
+            raise RuntimeError
+            
+        return response
 
     def pausesong(self):
         requests.put(url = self.Pause_endpoint, headers = self.Headers)
@@ -120,15 +125,15 @@ class spotify():
     def infocurrent(self):
         currently_playing = requests.get(self.Current_endpoint, headers = self.Headers)
         songdata = currently_playing.json()
-        item = songdata['item']
-        album = item['album']
-        albumname = album['name']
-        artists = album['artists']
-        song = item['name']
-        artist_string  = artists[0]
-        artist = artist_string['name']
-        duration_s = (item['duration_ms'])/1000
+        
+        
+        artist = songdata['item']['album']['artists'][0]['name']
+        song = songdata['item']['name']
+        albumname = songdata['item']['album']['name']
+        duration_s = (songdata['item']['duration_ms'])/1000
         progress_s = (songdata['progress_ms'])/1000
+        
+
         return [artist, song, albumname, progress_s, duration_s]
 
     def get_image(self):
