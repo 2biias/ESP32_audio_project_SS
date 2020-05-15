@@ -39,22 +39,16 @@ void AudioCodec::AudioCodecTask()
   Ringbuffer<short>* ReadBufPtr = getReadBuffer();
 
   for(;;){
-
     //gpio_set_level(GPIO_NUM_13, 1);
+
     ReadBufPtr->TakeBinarySemaphore();
+
     readlen = read(inputbuffer, 2048);
-    //std::cout << readlen << "\n";
-    //std::cout << std::bitset<16>(inputbuffer[0]) << " " << std::bitset<16>(inputbuffer[1]) << "\n";
 
     bytes = ShortToBytes(inputbuffer, outputbuffer, readlen);
 
-    //std::cout << bytes << "\n";
-
-    //std::cout << std::bitset<8>(outputbuffer[1]) << std::bitset<8>(outputbuffer[0]) << " " << std::bitset<8>(outputbuffer[3]) << std::bitset<8>(outputbuffer[2]) << "\n";
-
-    //gpio_set_level(GPIO_NUM_13, 1);
     i2s_write(I2S_NUM_0, outputbuffer, bytes, &i2s_bytes_written, 100);
-    //std::cout << i2s_bytes_written << "\n";
+
     gpio_set_level(GPIO_NUM_15, 0);
 
   }

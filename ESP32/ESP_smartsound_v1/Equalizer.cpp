@@ -32,10 +32,6 @@ uint32_t Equalizer::MonoMix(uint8_t* input, short* output, uint32_t bytes)
     // Calculate mean and place in left channel
     valueL = (valueL/2)+(valueR/2);
     output[(i/4)] = valueL;
-    /*
-    iobuffer[i+1] = (valueL >> 8);
-    iobuffer[i] = valueL & 0xff;
-    */
   }
   return (bytes/4);
 }
@@ -55,15 +51,11 @@ void Equalizer::EqualizerTask()
     readBufPtr->TakeBinarySemaphore();
     bytes = read(inputbuffer, 4096);
 
-    //std::cout << bytes << "\n";
-    std::cout << std::bitset<8>(inputbuffer[1]) << std::bitset<8>(inputbuffer[0]) << " "<< std::bitset<8>(inputbuffer[3]) << std::bitset<8>(inputbuffer[2]) << "\n";
-
     // Mix received signal into mono-signal
     len = MonoMix(inputbuffer, outputbuffer, bytes);
 
-    //std::cout << len*4 << "\n";
 
-    std::cout << std::bitset<16>(outputbuffer[0]) << "\n";
+    //std::cout << std::bitset<16>(outputbuffer[0]) << "\n";
 
     // Equalize the mixed signal
     //Equalize(buffer, len);

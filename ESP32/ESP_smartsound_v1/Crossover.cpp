@@ -2,7 +2,7 @@
 #include <iostream>
 #include <bitset>
 
-Crossover::Crossover(Ringbuffer<short>* read, Ringbuffer<short>* write)
+Crossover::Crossover(Ringbuffer<short>* read, Ringbuffer<short>* write, float* lp_coeffs, float* hp_coeffs)
 {
   //Setting up buffers
   bool res;
@@ -10,8 +10,22 @@ Crossover::Crossover(Ringbuffer<short>* read, Ringbuffer<short>* write)
   printf("Crossover setReadBuffer = %u\n", res);
   res = setWriteBuffer(write);
   printf("Crossover setWriteBuffer = %u\n", res);
-  xTaskCreate(this->taskWrapper, "CrossoverTask", 20000, this, configMAX_PRIORITIES-1, &taskHandle);
+  xTaskCreate(this->taskWrapper, "CrossoverTask", 25000, this, configMAX_PRIORITIES-1, &taskHandle);
+
+  // Setting passed filter coefficients
+  for (size_t i = 0; i < 5; i++) {
+    lp_coefficients[i] = lp_coeffs[i];
+    hp_coefficients[i] = hp_coeffs[i];
+  }
+  // Zeroing input and output history buffers
+  for (size_t i = 0; i < 4; i++) {
+    biquads_lp_oldinput[i] = 0;
+    biquads_lp_oldoutput[i] = 0;
+    biquads_hp_oldinput[i] = 0;
+    biquads_hp_oldoutput[i] = 0;
+  }
 }
+
 Crossover::~Crossover()
 {
   setReadBuffer(nullptr);
@@ -31,22 +45,14 @@ void Crossover::CrossoverTask()
     // Block untill lock given
     readBufPtr->TakeBinarySemaphore();
 
-    // Read 1024 signed 16-bit from equalizer
+    // Read a maximum of 1024 signed 16-bit from equalizer
     len = read(inputbuffer, 1024);
-    //std::cout << len*4 << "\n";
 
-    //std::cout << std::bitset<16>(inputbuffer[0]) << "\n";
+    // Filter using Linkwitz Riley crossover and output dual-channel
+    len = filter_LinkwitzRiley(inputbuffer, outputbuffer, len);
 
-    // Filter using Linkwitz Riley crossover
-    //bytes = crossoverfilter(buffer, 1024);
-
-    dummyfilter(inputbuffer, outputbuffer, len);
-
-    //std::cout << len*4 << "\n";
-    //std::cout << std::bitset<16>(outputbuffer[0]) << " " << std::bitset<16>(outputbuffer[1]) << "\n";
-
+    // Write to next ringubffer
     len = write(outputbuffer, len*2);
-    //std::cout << len*4 << "\n";
 
     writeBufPtr->GiveBinarySemaphore();
   }
@@ -56,11 +62,95 @@ void Crossover::taskWrapper(void* _this){
     ((Crossover*)_this)->CrossoverTask();
 }
 
-void Crossover::dummyfilter(short* in, short* out, uint32_t len){
+uint32_t Crossover::filter_LinkwitzRiley(short* input, short* output, uint32_t len)
+{
+
+  float accumulator;
+  float f_input;
 
   for (size_t i = 0; i < len; i++) {
-    /* code */
-    out[2*i] = in[i];
-    out[(2*i)+1] = in[i];
+
+    // ############################## LP (left channel) ############################## //
+    f_input = (float)(input[i]);
+
+    // ******************* Filtering through first lowpass biquad *******************//
+    accumulator = biquads_lp_oldinput[1] * lp_coefficients[2]; //b2
+    accumulator += biquads_lp_oldinput[0] * lp_coefficients[1]; //b1
+    accumulator += f_input * lp_coefficients[0]; //b0
+
+    // Reorder first biquad input history
+    biquads_lp_oldinput[1] = biquads_lp_oldinput[0];
+    biquads_lp_oldinput[0] = f_input;
+
+    accumulator += biquads_lp_oldoutput[1] * lp_coefficients[4]; // a2
+    accumulator += biquads_lp_oldoutput[0] * lp_coefficients[3]; // a1
+
+    // Reorder first biquad output history
+    biquads_lp_oldoutput[1] = biquads_lp_oldoutput[0];
+    biquads_lp_oldoutput[0] = accumulator;
+
+    // ******************* Filtering through second lowpass biquad *******************//
+    f_input = accumulator;
+
+    accumulator = biquads_lp_oldinput[3] * lp_coefficients[2]; //b2
+    accumulator += biquads_lp_oldinput[2] * lp_coefficients[1]; //b1
+    accumulator += f_input * lp_coefficients[0]; //b0
+
+    // Reorder second input history
+    biquads_lp_oldinput[3] = biquads_lp_oldinput[2];
+    biquads_lp_oldinput[2] = f_input;
+
+    accumulator += biquads_lp_oldoutput[3] * lp_coefficients[4]; // a2
+    accumulator += biquads_lp_oldoutput[2] * lp_coefficients[3]; // a1
+
+    // Reorder second output history
+    biquads_lp_oldoutput[3] = biquads_lp_oldoutput[2];
+    biquads_lp_oldoutput[2] = accumulator;
+
+    output[2*i] = (short)(accumulator*0.99);
+
+    // ############################## HP (right channel) ############################## //
+    f_input = (float)(input[i]);
+
+    // ******************* Filtering through first hp biquad *******************//
+    accumulator = biquads_hp_oldinput[1] * hp_coefficients[2]; //b2
+    accumulator += biquads_hp_oldinput[0] * hp_coefficients[1]; //b1
+    accumulator += f_input * hp_coefficients[0]; //b0
+
+    // Reorder first biquad input history
+    biquads_hp_oldinput[1] = biquads_hp_oldinput[0];
+    biquads_hp_oldinput[0] = f_input;
+
+    accumulator += biquads_hp_oldoutput[1] * hp_coefficients[4]; // a2
+    accumulator += biquads_hp_oldoutput[0] * hp_coefficients[3]; // a1
+
+    // Reorder first biquad output history
+    biquads_hp_oldoutput[1] = biquads_hp_oldoutput[0];
+    biquads_hp_oldoutput[0] = accumulator;
+
+    f_input = accumulator;
+
+    // ******************* Filtering through second hp biquad *******************//
+
+    accumulator = biquads_hp_oldinput[3] * hp_coefficients[2]; //b2
+    accumulator += biquads_hp_oldinput[2] * hp_coefficients[1]; //b1
+    accumulator += f_input * hp_coefficients[0]; //b0
+
+    // Reorder second input history
+    biquads_hp_oldinput[3] = biquads_hp_oldinput[2];
+    biquads_hp_oldinput[2] = f_input;
+
+    accumulator += biquads_hp_oldoutput[3] * hp_coefficients[4]; // a2
+    accumulator += biquads_hp_oldoutput[2] * hp_coefficients[3]; // a1
+
+    // Reorder second output history
+    biquads_hp_oldoutput[3] = biquads_hp_oldoutput[2];
+    biquads_hp_oldoutput[2] = accumulator;
+
+    output[(2*i)+1] = (short)(accumulator*0.99);
+
+    //output[2*i] = input[i];
+    //output[(2*i)+1] = input[i];
   }
+  return len;
 }
